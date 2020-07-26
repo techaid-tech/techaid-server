@@ -1,0 +1,8 @@
+FROM adoptopenjdk/openjdk11:alpine-jre
+# Add an init system
+RUN apk add --no-cache --update \
+    tini
+COPY build/libs/*.jar /app/app.jar
+WORKDIR /app
+ENTRYPOINT [ "/sbin/tini", "--"]
+CMD ["java", "-jar", "/app/app.jar"]

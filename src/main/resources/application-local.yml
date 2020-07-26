@@ -1,0 +1,22 @@
+spring:
+  flyway.locations:
+    - classpath:db/migration
+    - classpath:db/local
+  profiles.include: []
+
+management:
+  endpoints.web.exposure.include: "*"
+
+auth:
+  cors:
+    enabled: true
+    routes:
+      - origin: '*'
+        path: '*'
+        headers:
+          Access-Control-Allow-Methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+          Access-Control-Allow-Headers: 'Content-Type, Authorization, X-Auth-Admin-Secret'
+
+logging.level:
+  ju.ma: DEBUG
+  org.springframework.security: WARN

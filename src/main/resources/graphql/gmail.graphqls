@@ -1,0 +1,105 @@
+input EmailFilter {
+    maxResults: Long
+    pageToken: String
+    query: String
+    userId: String
+    id: String
+    labelIds: [String]
+}
+
+type Thread {
+    historyId: Int
+    id: String
+    messages: [Message]
+    snippet: String
+}
+
+type ThreadPage {
+    resultSizeEstimate: Long
+    nextPageToken: String
+    threads: [Thread]
+}
+
+type EmailPage {
+    resultSizeEstimate: Long
+    nextPageToken: String
+    messages: [Message]
+}
+
+type Label {
+    id: String
+    name: String
+    messagesTotal: Int
+    messagesUnread: Int
+    color: LabelColor
+}
+
+type LabelColor {
+    backgroundColor: String
+    textColor: String
+}
+
+type Message {
+    id: String
+    labelIds: [String]
+    internalDate: Long
+    raw: String
+    sizeEstimate: Int
+    snippet: String
+    threadId: String
+    historyId: Int
+    payload: MessagePart
+}
+
+type Draft {
+    id: String
+    message: Message
+}
+
+type MessagePart {
+    partId: String
+    mimeType: String
+    filename: String
+    body: MessagePartBody
+    parts: [MessagePart]
+    content(mimeType: String): MessagePart
+    headers(keys: [String!]): [MessagePartHeader!]
+}
+
+type MessagePartHeader {
+    name: String
+    value: String
+}
+
+type MessagePartBody {
+    attachmentId: String
+    data: String
+    size: Int
+    decodedData: String
+}
+
+input EmailInput {
+    subject: String!
+    to: String!
+    body: String!
+    mimeType: String
+}
+
+
+extend type Query {
+    email(id: ID!): Message
+    thread(id: ID!): Thread
+    emailThreads(filter: EmailFilter): ThreadPage
+    emails(filter: EmailFilter id: ID): EmailPage
+    emailLabels(ids: [ID]): [Label!]
+}
+
+extend type Mutation {
+    sendEmail(data: EmailInput!): Message
+    replyEmail(id: ID!, data: EmailInput!): Message
+    draftEmail(data: EmailInput!): Draft
+    replyDraft(id: ID!, data: EmailInput!): Draft
+    updateDraft(id: ID!, data: EmailInput): Draft
+    deleteDraft(id: ID!): Boolean
+    sendDraft(id: ID!, data: EmailInput): Message
+}

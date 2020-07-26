@@ -1,0 +1,94 @@
+type Donor {
+    id: ID!
+    postCode: String
+    name: String
+    phoneNumber: String
+    email: String
+    referral: String
+    createdAt: String
+    updatedAt: String
+    kitCount: Int
+    kits: [Kit!]
+    coordinates: Coordinates
+}
+
+input CreateDonorInput {
+    name: String
+    postCode: String
+    phoneNumber: String
+    email: String
+    referral: String
+}
+
+input UpdateDonorInput {
+    id: ID!
+    name: String
+    postCode: String
+    phoneNumber: String
+    email: String
+    referral: String
+}
+
+input DonateItemInput {
+    kits: [CreateKitInput!]
+    donor: CreateDonorInput
+}
+
+type DonateItemPayload {
+    donor: Donor!
+    kits: [Kit!]
+}
+
+"A representation of a page result from a query"
+type DonorPage {
+    "The list of deals retrieved from the server"
+    content: [Donor!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+input DonorWhereInput {
+    id: LongComparison
+    name: TextComparison
+    postCode: TextComparison
+    phoneNumber: TextComparison
+    email: TextComparison
+    referral: TextComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    AND: [DonorWhereInput!]
+    OR: [DonorWhereInput!]
+    NOT: [DonorWhereInput!]
+}
+
+extend type Query {
+    donorsConnection(page: PaginationInput, where: DonorWhereInput): DonorPage
+    donors(where: DonorWhereInput!, orderBy: [KeyValuePair!]): [Donor!]!
+    donor(where: DonorWhereInput!): Donor
+}
+
+extend type Mutation {
+    createDonor(data: CreateDonorInput!) : Donor!
+    updateDonor(data: UpdateDonorInput!): Donor!
+    deleteDonor(id: ID!): Boolean
+    donateItem(data: DonateItemInput): DonateItemPayload!
+}
+

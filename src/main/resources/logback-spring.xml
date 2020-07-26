@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <contextName>${spring.application.name}</contextName>
+
+    <springProfile name="productionx,stagingx">
+        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"env":"${SPRING_PROFILES_ACTIVE:-development}"}</customFields>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="local,console,test,production,staging">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    </springProfile>
+
+</configuration>

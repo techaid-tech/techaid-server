@@ -1,0 +1,18 @@
+ALTER TABLE kits
+  ALTER COLUMN "type" DROP DEFAULT,
+  ALTER COLUMN "status" DROP DEFAULT;
+
+ALTER TABLE kits
+ALTER COLUMN "status" TYPE varchar(255) USING CASE WHEN "status" = 1 THEN 'NEW' ELSE 'NEW' END,
+ALTER COLUMN "type" TYPE varchar(255) USING
+CASE
+  WHEN "type" = 1 THEN 'LAPTOP'
+  WHEN "type" = 2 THEN 'TABLET'
+  WHEN "type" = 3 THEN 'SMARTPHONE'
+  WHEN "type" = 4 THEN 'ALLINONE'
+  ELSE 'OTHER'
+END
+;
+
+ALTER TABLE volunteers
+  ADD COLUMN attributes jsonb;

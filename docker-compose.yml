@@ -1,0 +1,57 @@
+version: '3.3'
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: stretech:1.0.0
+    environment:
+      SPRING_PROFILES_ACTIVE: ${ACTIVE_PROFILE:-local}
+      DATASOURCE_PASSWORD: ${DB_PASS:-password}
+      DATASOURCE_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/stretech}
+      DATASOURCE_USERNAME: ${DB_USER:-postgres}
+      AUTH0_AUDIENCE:
+      AUTH0_DOMAIN:
+      AUTH0_CLIENT_ID:
+      AUTH0_CLIENT_SECRET:
+      GOOGLE_PLACES_KEY:
+      GMAIL_CLIENT_ID:
+      GMAIL_CLIENT_SECRET:
+      GMAIL_REFRESH_TOKEN:
+      COMMENTO_AUTH_DOMAIN:
+      COMMENTO_KEY:
+      COMMENTO_AUTH_CLIENT_ID:
+      COMMENTO_AUTH_CLIENT_SECRET:
+      COMMENTO_AUTH_AUDIENCE:
+      COMMENTO_AUTH_SCOPES:
+      COMMENTO_AUTH_REDIRECT:
+      DDL_AUTO:
+      SHOW_SQL: "${SHOW_SQL:-true}"
+    command: []
+    volumes:
+      - ./src/main/resources/application-local.yml:/app/config/application-local.yml:ro
+      - ./src/main/resources/application.yml:/app/config/application.yml:ro
+      - ./src/main/resources/db:/db
+      - ./build/libs/stretech-0.0.1-SNAPSHOT.jar:/app/app.jar
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+#  proxy:
+#    image: nginx:1.16-alpine
+#    depends_on:
+#      - web
+#    ports:
+#      - 8080:80
+#    volumes:
+#      - ./docker/proxy.conf:/etc/nginx/nginx.conf
+  postgres:
+    image: postgres:11.5
+    environment:
+      POSTGRES_DB: stretech
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}

@@ -1,0 +1,157 @@
+type Volunteer {
+    id: ID!
+    name: String!
+    phoneNumber: String
+    email: String
+    expertise: String
+    subGroup: String
+    storage: String
+    transport: String,
+    postCode: String
+    availability: String
+    createdAt: String
+    kitCount: Int
+    updatedAt: String
+    kits: [KitVolunteer!]
+    coordinates: Coordinates
+    attributes: VolunteerAttributes
+    organisations: [Organisation]
+}
+
+type VolunteerAttributes {
+    accepts: [String!]
+    dropOffAvailability: String
+    capacity: Capacity
+    hasCapacity: Boolean
+}
+
+input VolunteerAttributesInput {
+    accepts: [String!]
+    dropOffAvailability: String
+    capacity: CapacityInput
+    hasCapacity: Boolean
+}
+
+type Capacity {
+    phones: Int
+    tablets: Int
+    laptops: Int
+    allInOnes: Int
+    other: Int
+}
+
+input CapacityInput {
+    phones: Int
+    tablets: Int
+    laptops: Int
+    allInOnes: Int
+    other: Int
+}
+
+input VolunteerCapacityWhereInput {
+    phones: IntegerComparison
+    tablets: IntegerComparison
+    laptops: IntegerComparison
+    allInOnes: IntegerComparison
+    filters: [JsonComparison!]
+    AND: [VolunteerCapacityWhereInput]
+    OR: [VolunteerCapacityWhereInput]
+    NOT: [VolunteerCapacityWhereInput]
+}
+
+input VolunteerAttributesWhereInput {
+    dropOffAvailability: TextComparison
+    hasCapacity: BooleanComparison
+    capacity: VolunteerCapacityWhereInput
+    filters: [JsonComparison!]
+    AND: [VolunteerAttributesWhereInput]
+    OR: [VolunteerAttributesWhereInput]
+    NOT: [VolunteerAttributesWhereInput]
+}
+
+input CreateVolunteerInput {
+    name: String!
+    phoneNumber: String
+    email: String
+    expertise: String
+    subGroup: String
+    storage: String
+    transport: String
+    postCode: String
+    availability: String
+    consent: String
+    attributes: VolunteerAttributesInput
+}
+
+input UpdateVolunteerInput {
+    id: ID!
+    name: String!
+    phoneNumber: String
+    email: String
+    expertise: String
+    subGroup: String
+    storage: String
+    transport: String
+    postCode: String
+    availability: String
+    attributes: VolunteerAttributesInput
+}
+
+"A representation of a page result from a query"
+type VolunteerPage {
+    "The list of deals retrieved from the server"
+    content: [Volunteer!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+input VolunteerWhereInput {
+    name: TextComparison
+    id: LongComparison
+    phoneNumber: TextComparison
+    email: TextComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    transport: TextComparison
+    expertis: TextComparison
+    subGroup: TextComparison
+    storage: TextComparison
+    postCode: TextComparison
+    transport: TextComparison
+    availability: TextComparison
+    attributes: VolunteerAttributesWhereInput
+    AND: [VolunteerWhereInput!]
+    OR: [VolunteerWhereInput!]
+    NOT: [VolunteerWhereInput!]
+}
+
+extend type Query {
+    volunteersConnection(page: PaginationInput, where: VolunteerWhereInput): VolunteerPage
+    volunteers(where: VolunteerWhereInput!, orderBy: [KeyValuePair!]): [Volunteer!]!
+    volunteer(where: VolunteerWhereInput!): Volunteer
+}
+
+extend type Mutation {
+    createVolunteer(data: CreateVolunteerInput!) : Volunteer!
+    updateVolunteer(data: UpdateVolunteerInput!): Volunteer!
+    deleteVolunteer(id: ID!): Boolean
+}
+

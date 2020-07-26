@@ -1,0 +1,148 @@
+type Post {
+    id: ID!
+    slug: String!
+    title: String!
+    published: Boolean
+    secured: Boolean
+    content: String
+    createdAt: String
+    updatedAt: String
+}
+
+input CreatePostInput {
+    slug: String!
+    title: String!
+    published: Boolean
+    secured: Boolean
+    content: String
+}
+
+input UpdatePostInput {
+    id: ID!
+    slug: String!
+    title: String!
+    published: Boolean
+    secured: Boolean
+    content: String
+}
+
+"A representation of a page result from a query"
+type PostPage {
+    "The list of deals retrieved from the server"
+    content: [Post!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+type Faq {
+    id: ID!
+    title: String
+    published: Boolean
+    content: String
+    createdAt: String
+    updatedAt: String
+    position: Int
+}
+
+input CreateFaqInput {
+    title: String
+    published: Boolean
+    content: String
+    position: Int
+}
+
+input UpdateFaqInput {
+    id: ID!
+    title: String!
+    published: Boolean
+    content: String!
+    position: Int
+}
+
+"A representation of a page result from a query"
+type FaqPage {
+    "The list of deals retrieved from the server"
+    content: [Faq!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+input PostWhereInput {
+    id: LongComparison
+    content: TextComparison
+    slug: TextComparison
+    title: TextComparison
+    published: BooleanComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    AND: [PostWhereInput!]
+    OR: [PostWhereInput!]
+    NOT: [PostWhereInput!]
+}
+
+input FaqWhereInput {
+    id: LongComparison
+    title: TextComparison
+    content: TextComparison
+    published: BooleanComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    AND: [FaqWhereInput!]
+    OR: [FaqWhereInput!]
+    NOT: [FaqWhereInput!]
+}
+
+extend type Query {
+    postsConnection(page: PaginationInput, where: PostWhereInput): PostPage
+    posts(where: PostWhereInput!, orderBy: [KeyValuePair!]): [Post!]!
+    post(where: PostWhereInput!): Post
+    faqsConnection(page: PaginationInput, where: FaqWhereInput): FaqPage
+    faqs(where: FaqWhereInput!, orderBy: [KeyValuePair!]): [Faq!]!
+    faq(where: FaqWhereInput!): Faq
+}
+
+extend type Mutation {
+    createPost(data: CreatePostInput!): Post!
+    updatePost(data: UpdatePostInput!): Post!
+    deletePost(id: ID!): Boolean
+    createFaq(data: CreateFaqInput!) : Faq!
+    updateFaq(data: UpdateFaqInput!): Faq!
+    deleteFaq(id: ID!): Boolean
+}
+

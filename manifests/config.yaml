@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stretech-config
+  namespace: apps
+data:
+  DATASOURCE_URL: "jdbc:postgresql://stretech-db.apps.svc:5432/stretech"
+  SPRING_PROFILES_ACTIVE: "production"

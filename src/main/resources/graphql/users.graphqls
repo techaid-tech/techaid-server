@@ -1,0 +1,75 @@
+type User {
+    email: String
+    emailVerified: Boolean
+    phoneNumber: String
+    userId: String
+    name: String
+    picture: String
+    connection: String
+    lastLogin: String
+    blocked: Boolean
+    loginsCount: Int
+    lastIp: String
+    roles(page: PaginationInput): RolePage
+    permissions(page: PaginationInput): PermissionPage
+}
+
+type UserPage {
+    items: [User!]
+    start: Int
+    length: Int
+    total: Int
+    limit: Int
+}
+
+type Role {
+    id: String
+    name: String
+    description: String
+    permissions(page: PaginationInput): PermissionPage
+    users(page: PaginationInput): UserPage
+}
+
+type Permission {
+    resourceServerId: String
+    resourceServerName: String
+    name: String
+    description: String
+}
+
+input PermissionInput {
+    resourceServerId: String
+    resourceServerName: String
+    name: String
+    description: String
+}
+
+type PermissionPage {
+    items: [Permission!]
+    start: Int
+    length: Int
+    total: Int
+    limit: Int
+}
+
+type RolePage {
+    items: [Role!]
+    start: Int
+    length: Int
+    total: Int
+    limit: Int
+}
+
+extend type Query {
+    users(page: PaginationInput!, filter: String): UserPage
+    user(id: ID!): User
+    roles(page: PaginationInput!, filter: String): RolePage
+    role(id: ID!): Role
+}
+
+extend type Mutation {
+    assignRoles(roleId: ID!, userIds: [ID!]!): Role
+    removeRoles(userId: ID!, roleIds: [ID!]!): User
+    removePermissions(userId: ID!, permissions: [PermissionInput!]!): User
+    deleteUser(userId: ID!): Boolean
+}

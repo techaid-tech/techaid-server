@@ -1,0 +1,153 @@
+spring.application:
+  name: stretech
+  environment: unknown
+
+management:
+  context-path: /actuator
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+  health:
+    diskspace.enabled: false
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git.mode: full
+  metrics:
+    tags:
+      service: "${spring.application.name}"
+      env: "${spring.application.environment}"
+      instance: "${HOSTNAME}"
+    export:
+      datadog:
+        application-key:
+        enabled: false
+        api-key:
+google:
+  places:
+    key: ${GOOGLE_PLACES_KEY:}
+gmail:
+  client-id: ${GMAIL_CLIENT_ID:}
+  client-secret: ${GMAIL_CLIENT_SECRET:}
+  refresh-token: ${GMAIL_REFRESH_TOKEN:}
+  address: ${GMAIL_ADDRESS:covidtechaid@gmail.com}
+
+server:
+  port: ${PORT:8080}
+  max-http-header-size: 50MB
+  tomcat:
+    max-http-form-post-size: 50MB
+  forward-headers-strategy: NATIVE
+
+hugo:
+  github:
+    token: ${HUGO_GITHUB_TOKEN:}
+commento:
+  url: ${COMMENTO_URL:https://commento.ju.ma}
+  key: ${COMMENTO_KEY:}
+  auth:
+    domain: ${COMMENTO_AUTH_DOMAIN:}
+    client-id: ${COMMENTO_AUTH_CLIENT_ID:}
+    client-secret: ${COMMENTO_AUTH_CLIENT_SECRET:}
+    audience: ${COMMENTO_AUTH_AUDIENCE:}
+    scopes: ${COMMENTO_AUTH_SCOPES:openid email profile}
+    redirect: ${COMMENTO_AUTH_REDIRECT:}
+    key: ${COMMENTO_KEY:}
+auth0:
+  audience: ${AUTH0_AUDIENCE:}
+  domain: ${AUTH0_DOMAIN:}
+  client-id: ${AUTH0_CLIENT_ID:}
+  client-secret: ${AUTH0_CLIENT_SECRET:}
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://lambeth-techaid.eu.auth0.com/
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  datasource:
+    url: ${DATASOURCE_URL:${db-url:jdbc:postgresql://localhost:5432/stretech}}
+    username: ${POSTGRES_USER:${DATASOURCE_USERNAME:${db-user:}}}
+    password: ${POSTGRES_PASSWORD:${DATASOURCE_PASSWORD:${db-pass:}}}
+  jpa:
+    # The SQL dialect makes Hibernate generate better SQL for the chosen database
+    open-in-view: false
+    properties:
+      hibernate:
+        #        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        dialect: com.github.alexliesenfeld.querydsl.jpa.hibernate.PostgreSQLJsonDialect
+        # Make hibernate correctly handle java.sql.SQLFeatureNotSupportedException when attempting to detect
+        # The available functions for the selected dialect
+        #
+        # @see https://github.com/spring-projects/spring-boot/issues/12007
+        # @see https://hibernate.atlassian.net/browse/HHH-12368
+        #
+        # Fixed in hibernate 5.4.0.CR1 So not needed if you are using a more recent version
+        # Check with:
+        # $: ./gradlew dependencies | grep hibernate-core
+        jdbc.lob.non_contextual_creation: true
+        # Format the generated SQL statements to make it more readable
+        format_sql: true
+        show_sql: ${SHOW_SQL:${show-sql:false}}
+        # Prevent LazyInitializationException being thrown from hibernate when fetching associations outside a
+        # session. With this value active, hibernate will create temporary sessions when an lazy loaded entity
+        # wasn't fetched in the initial query. This will work, but it's far better to use a DTO projection or
+        # a JOIN FETCH query to retrieve the data
+        enable_lazy_load_no_trans: true
+    # Hibernate ddl auto (create, create-drop, validate, update, none)
+    #   validate: validate the schema, makes no changes to the database, will throw exception if table not found
+    #   update: update the schema, creates the schema if none exists
+    #   create: creates the schema, destroying previous data
+    #   create-drop: drop the schema when the SessionFactory is closed explicitly, usually when app is stopped
+    #   none: do nothing
+    hibernate.ddl-auto: ${DDL_AUTO:${ddl-auto:none}}
+  flyway:
+    out-of-order: true
+    locations:
+      - classpath:db/migration
+  resources:
+    static-locations:
+      - classpath:/META-INF/resources/
+      - classpath:/resources/
+      - classpath:/public/
+      - classpath:/static/
+      - classpath:/web/
+      - file:/app/docs/
+
+logging.level:
+  com.alphasights: INFO
+  org.apache.tomcat: WARN
+  org.apache.catalina: WARN
+
+auth:
+  admin-secret: ${AUTH_ADMIN_SECRET:password}
+  cors:
+    enabled: true
+    routes:
+      - origin: '*'
+        path: '*'
+        headers:
+          Access-Control-Allow-Methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+          Access-Control-Allow-Headers: '*'
+
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+    actuator-metrics: true
+    tracing-enabled: false
+    # if you want to @ExceptionHandler annotation for custom GraphQLErrors
+    exception-handlers-enabled: true
+

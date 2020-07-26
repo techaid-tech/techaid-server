@@ -1,0 +1,11 @@
+hooks/*
+gradle/**
+docker/*
+docs/**
+docker-compose.yml
+build.gradle
+gradlew
+gradlew.bat
+README.md
+settings.gradle
+.ciignore

@@ -1,0 +1,239 @@
+enum KitType {
+    OTHER, LAPTOP, TABLET, SMARTPHONE, ALLINONE, CHROMEBOOK
+}
+
+type KitStatusCount {
+    status: KitStatus
+    count: Int
+}
+
+type KitTypeCount {
+    type: KitType
+    count: Int
+}
+
+input KitTypeComparison {
+    "Matches values that are equal to"
+    _eq: KitType
+    "Matches values that are greater than"
+    _gt: KitType
+    "Matches values that are greater than or equal to"
+    _gte: KitType
+    "Matches values contained in the collection"
+    _in: [KitType]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: KitType
+    "Matches values that are less than or equal to"
+    _lte: KitType
+    "Matches values that are not equal to"
+    _neq: KitType
+    "Matches values that are not contained in the collection"
+    _nin: [KitType]
+}
+
+type KitImage {
+    image: String
+    id: ID
+}
+
+input KitImageInput {
+    image: String
+    id: ID
+    url: String
+}
+
+enum KitStatus {
+    NEW,
+    ASSESSMENT_NEEDED,
+    ACCEPTED,
+    DECLINED,
+    DROPOFF_AGGREED,
+    DROPOFF_PENDING,
+    PICKUP_SCHEDULED,
+    WITH_TECHIE,
+    UPDATE_FAILED,
+    READY,
+    ALLOCATED,
+    DELIVERY_ARRANGED,
+    DELIVERED
+}
+
+input KitStatusComparison {
+    "Matches values that are equal to"
+    _eq: KitStatus
+    "Matches values that are greater than"
+    _gt: KitStatus
+    "Matches values that are greater than or equal to"
+    _gte: KitStatus
+    "Matches values contained in the collection"
+    _in: [KitStatus]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: KitStatus
+    "Matches values that are less than or equal to"
+    _lte: KitStatus
+    "Matches values that are not equal to"
+    _neq: KitStatus
+    "Matches values that are not contained in the collection"
+    _nin: [KitStatus]
+}
+
+type Kit {
+    id: ID!
+    type: KitType
+    status: KitStatus
+    model: String
+    location: String
+    createdAt: String
+    updatedAt: String
+    archived: Boolean
+    age: Int
+    attributes: KitAttributes!
+    donor: Donor
+    volunteers: [KitVolunteer!]
+    coordinates: Coordinates
+    organisation: Organisation
+}
+
+enum  KitVolunteerType { LOGISTICS, ORGANISER, TECHNICIAN }
+
+type KitVolunteerId {
+    kitId: ID!
+    volunteerId: ID!
+    type: KitVolunteerType!
+}
+
+type KitVolunteer {
+    id: KitVolunteerId
+    kit: Kit
+    volunteer: Volunteer
+    type: KitVolunteerType
+}
+
+type KitAttributes {
+    state: String
+    consent: String
+    pickup: String
+    otherType: String
+    notes: String
+    pickupAvailability: String
+    credentials: String
+    images: [KitImage!]
+    status: [String]
+    network: String
+    otherNetwork: String
+}
+
+input KitAttributesInput {
+    images: [KitImageInput!]
+    state: String
+    consent: String
+    pickup: String
+    otherType: String
+    pickupAvailability: String
+    credentials: String
+    notes: String
+    status: [String]
+    network: String
+    otherNetwork: String
+}
+
+"A representation of a page result from a query"
+type KitPage {
+    "The list of deals retrieved from the server"
+    content: [Kit!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+input KitWhereInput {
+    id: LongComparison
+    status: KitStatusComparison
+    type: KitTypeComparison
+    location: TextComparison
+    age: IntegerComparison
+    state: TextComparison
+    model: TextComparison
+    location: TextComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    archived: BooleanComparison
+    attributes: KitAttributesWhereInput
+    volunteer: VolunteerWhereInput
+    donor: DonorWhereInput
+    organisation: OrganisationWhereInput
+    AND: [KitWhereInput!]
+    OR: [KitWhereInput!]
+    NOT: [KitWhereInput!]
+}
+
+input KitAttributesWhereInput {
+    otherType: TextComparison
+    pickup: TextComparison
+    state: TextComparison
+    consent: TextComparison
+    filters: [JsonComparison!]
+    AND: [KitAttributesWhereInput!]
+    OR: [KitAttributesWhereInput!]
+    NOT: [KitAttributesWhereInput!]
+}
+
+input CreateKitInput {
+    type: KitType!
+    status: KitStatus
+    model: String!
+    location: String!
+    age: Int!
+    attributes: KitAttributesInput!
+}
+
+input UpdateKitInput {
+    id: ID!
+    type: KitType!
+    status: KitStatus!
+    model: String!
+    age: Int!
+    archived: Boolean
+    location: String!
+    attributes: KitAttributesInput!
+    organiserIds: [ID]
+    technicianIds: [ID]
+    logisticIds: [ID]
+    donorId: ID
+    organisationId: ID
+}
+
+extend type Query {
+    kitsConnection(page: PaginationInput, where: KitWhereInput): KitPage
+    kits(where: KitWhereInput!, orderBy: [KeyValuePair!]): [Kit!]!
+    kit(where: KitWhereInput!): Kit
+    statusCount: [KitStatusCount!]
+    typeCount: [KitTypeCount!]
+}
+
+extend type Mutation {
+    createKit(data: CreateKitInput!) : Kit!
+    updateKit(data: UpdateKitInput!): Kit!
+    deleteKit(id: ID!): Boolean
+}

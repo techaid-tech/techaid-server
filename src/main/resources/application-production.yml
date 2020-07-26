@@ -1,0 +1,15 @@
+spring:
+  profiles.include: []
+
+auth:
+  cors:
+    enabled: true
+    routes:
+      - origin: '*'
+        path: '*'
+        headers:
+          Access-Control-Allow-Methods: 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+          Access-Control-Allow-Headers: '*'
+
+logging.level:
+  ju.ma: DEBUG

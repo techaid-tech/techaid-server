@@ -1,0 +1,125 @@
+type Organisation {
+    id: ID
+    name: String
+    website: String
+    contact: String
+    phoneNumber: String
+    email: String
+    createdAt: String
+    updatedAt: String
+    kitCount: Int
+    attributes: OrganisationAttributes
+    volunteer: Volunteer
+    archived: Boolean
+    kits: [Kit!]
+}
+
+type RequestCount {
+    phones: Int
+    laptops: Int
+    tablets: Int
+    allInOnes: Int
+    chromebooks: Int
+    other: Int
+}
+
+input CreateOrganisationInput {
+    name: String
+    website: String
+    phoneNumber: String
+    email: String
+    contact: String
+    attributes: OrganisationAttributesInput
+}
+
+input UpdateOrganisationInput {
+    id: ID!
+    name: String
+    website: String
+    phoneNumber: String
+    email: String
+    contact: String
+    volunteerId: ID
+    archived: Boolean
+    attributes: OrganisationAttributesInput
+}
+
+"A representation of a page result from a query"
+type OrganisationPage {
+    "The list of deals retrieved from the server"
+    content: [Organisation!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+type OrganisationAttributes {
+    request: Capacity
+    alternateRequest: Capacity
+    accepts: [String!]
+    alternateAccepts: [String!]
+    notes: String
+}
+
+input OrganisationAttributesInput {
+    request: CapacityInput
+    alternateRequest: CapacityInput
+    accepts: [String!]
+    alternateAccepts: [String!]
+    notes: String
+    details: String
+}
+
+input OrganisationWhereInput {
+    id: LongComparison
+    website: TextComparison
+    phoneNumber: TextComparison
+    name: TextComparison
+    email: TextComparison
+    contact: TextComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    archived: BooleanComparison
+    volunteer: VolunteerWhereInput
+    attributes: OrganisationAttributesWhereInput
+    AND: [OrganisationWhereInput!]
+    OR: [OrganisationWhereInput!]
+    NOT: [OrganisationWhereInput!]
+}
+
+input OrganisationAttributesWhereInput {
+    filters: [JsonComparison!]
+    AND: [OrganisationAttributesWhereInput!]
+    OR: [OrganisationAttributesWhereInput!]
+    NOT: [OrganisationAttributesWhereInput!]
+}
+
+extend type Query {
+    organisationsConnection(page: PaginationInput, where: OrganisationWhereInput): OrganisationPage
+    organisations(where: OrganisationWhereInput!, orderBy: [KeyValuePair!]): [Organisation!]!
+    organisation(where: OrganisationWhereInput!): Organisation
+    requestCount: RequestCount
+}
+
+extend type Mutation {
+    createOrganisation(data: CreateOrganisationInput!) : Organisation!
+    updateOrganisation(data: UpdateOrganisationInput!): Organisation!
+    deleteOrganisation(id: ID!): Boolean
+}

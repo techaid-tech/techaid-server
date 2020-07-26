@@ -1,0 +1,99 @@
+"Representation of a Java big decimal"
+scalar BigDecimal
+scalar Long
+
+"A class that makes it easier for passing across key/value pairs within graphql"
+input KeyValuePair {
+    "The key of the property in question"
+    key: String!
+    "The value of the property in question"
+    value: String!
+}
+
+"A class that makes it easier for passing across key/value pairs within graphql"
+type Map {
+    "The key of the property in question"
+    key: String!
+    "The value of the property in question"
+    value: String!
+}
+
+"A class for specifiying filters to paginated graphql queries"
+input PaginationInput {
+    "The page number to load, starts from index 0"
+    page: Int
+    "The size of the elements to load"
+    size: Int
+    "Array of key/value pairs for sorting, the key is the column name the value is the sort direction ASC/DESC"
+    sort: [KeyValuePair!]
+}
+"A representation of a page result from a count query"
+type Page {
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+"An element for capturing the stack traces from the api"
+type StackTraceElement {
+    "The class that threw the exception"
+    declaringClass: String
+    "The name of the affected method"
+    methodName: String
+    "The field that was affected"
+    fileName: String
+    "The line number where the exception was thrown"
+    lineNumber: String
+}
+"A catch all class for returning exceptions thrown by the api"
+type Exception {
+    "The exception message detailing what went wrong"
+    message: String
+    "The stack trace for the current exception"
+    stackTrace: [StackTraceElement!]
+}
+"Global error handling class"
+type AppError {
+    "Descriptive error message"
+    message: String!
+    "The class of the error"
+    type: String!
+    "The extra details about the exception"
+    context: [Map!]
+}
+
+type Coordinates {
+    lat: String,
+    lng: String,
+    address: String
+    input: String
+}
+
+"Core type that holds all the queries for the api"
+type Query {
+    location(address: String) : Coordinates
+}
+
+type Mutation {
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

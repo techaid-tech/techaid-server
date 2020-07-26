@@ -1,0 +1,86 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+    working_directory: ~/app
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - restore_cache:
+          keys:
+            - app-source-{{ .Branch }}-{{ .Revision }}
+            - app-source-{{ .Branch }}-
+            - app-source-
+
+      - checkout
+      - save_cache:
+          key: app-source-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ~/app
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run: gradle clean build test
+
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/test/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: build/reports
+
+  push_docker_image:
+    working_directory: ~/app
+    docker:
+      - image: circleci/python:3.6.1
+    steps:
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - app-source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: Build & Push Image
+          command: |
+            IMAGE=stretech
+            GCR_IMAGE="eu.gcr.io/retinue-io/$IMAGE:prod-${CIRCLE_SHA1:0:7}"
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PWD eu.gcr.io/retinue-io
+            docker build -t $GCR_IMAGE .
+            docker push $GCR_IMAGE
+
+workflows:
+  version: 2
+  ci_workflow:
+    jobs:
+      - build
+      - push_docker_image:
+          context: default
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master

@@ -1,0 +1,71 @@
+type EmailTemplate {
+    id: ID
+    active: Boolean
+    body: String
+    subject: String
+    createdAt: String
+    updatedAt: String
+}
+
+input CreateEmailTemplateInput {
+    active: Boolean
+    body: String
+    subject: String
+}
+
+input UpdateEmailTemplateInput {
+    id: ID!
+    active: Boolean
+    body: String
+    subject: String
+}
+
+"A representation of a page result from a query"
+type EmailTemplatePage {
+    "The list of deals retrieved from the server"
+    content: [EmailTemplate!]
+    "The number of total pages"
+    totalPages: Int
+    "The total amount of elements in this request"
+    totalElements: Int
+    "The size of the current page"
+    size: Int
+    "Returns whether the current page is the first"
+    first: Boolean
+    "Returns whether the current page is the last"
+    last: Boolean
+    "Returns if there is a next page"
+    hasNext: Boolean
+    "Returns if there is a previous page"
+    hasPrevious: Boolean
+    "Number of elements in current slice"
+    numberOfElements: Int
+    "Returns whether the page has content at all"
+    hasContent: Boolean
+    "The number of the current page"
+    number: Int
+}
+
+input EmailTemplateWhereInput {
+    id: LongComparison
+    active: BooleanComparison
+    body: TextComparison
+    subject: TextComparison
+    createdAt: TimeComparison
+    updatedAt: TimeComparison
+    AND: [EmailTemplateWhereInput!]
+    OR: [EmailTemplateWhereInput!]
+    NOT: [EmailTemplateWhereInput!]
+}
+
+extend type Query {
+    emailTemplatesConnection(page: PaginationInput, where: EmailTemplateWhereInput): EmailTemplatePage
+    emailTemplates(where: EmailTemplateWhereInput!, orderBy: [KeyValuePair!]): [EmailTemplate!]!
+    emailTemplate(where: EmailTemplateWhereInput!): EmailTemplate
+}
+
+extend type Mutation {
+    createEmailTemplate(data: CreateEmailTemplateInput!) : EmailTemplate!
+    updateEmailTemplate(data: UpdateEmailTemplateInput!): EmailTemplate!
+    deleteEmailTemplate(id: ID!): Boolean
+}

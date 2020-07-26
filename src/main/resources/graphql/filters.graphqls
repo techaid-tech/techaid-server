@@ -1,0 +1,208 @@
+"Orderby clause for pages"
+enum PageOrderBy {
+    "in the ascending order, nulls last"
+    ASC,
+    "in the ascending order, nulls first"
+    ASC_NULLS_FIRST,
+    "in the ascending order, nulls last"
+    ASC_NULLS_LAST,
+    "in the descending order, nulls first"
+    DESC,
+    "in the descending order, nulls first"
+    DESC_NULLS_FIRST,
+    "in the descending order, nulls last"
+    DESC_NULLS_LAST
+}
+
+"Integer comparison filter"
+input IntegerComparison {
+    "Matches values that are equal to"
+    _eq: Int
+    "Matches values that are greater than"
+    _gt: Int
+    "Matches values that are greater than or equal to"
+    _gte: Int
+    "Matches values contained in the collection"
+    _in: [Int]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: Int
+    "Matches values that are less than or equal to"
+    _lte: Int
+    "Matches values that are not equal to"
+    _neq: Int
+    "Matches values that are not contained in the collection"
+    _nin: [Int]
+    "Matches value that are like the specified text"
+    _like: String
+    "Matches value that contains the specified text"
+    _contains: String
+    "Filter by string value"
+    _string: TextComparison
+}
+
+"Long comparison filter"
+input LongComparison {
+    "Matches values that are equal to"
+    _eq: Long
+    "Matches values that are greater than"
+    _gt: Long
+    "Matches values that are greater than or equal to"
+    _gte: Long
+    "Matches values contained in the collection"
+    _in: [Long]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: Long
+    "Matches values that are less than or equal to"
+    _lte: Long
+    "Matches values that are not equal to"
+    _neq: Long
+    "Matches values that are not contained in the collection"
+    _nin: [Long]
+    "Matches value that are like the specified text"
+    _like: String
+    "Matches value that contains the specified text"
+    _contains: String
+    "Filter by string value"
+    _string: TextComparison
+}
+
+"BigDecimal comparison filter"
+input BigDecimalComparision {
+    "Matches values that are equal to"
+    _eq: BigDecimal
+    "Matches values that are greater than"
+    _gt: BigDecimal
+    "Matches values that are greater than or equal to"
+    _gte: BigDecimal
+    "Matches values contained in the collection"
+    _in: [BigDecimal]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: BigDecimal
+    "Matches values that are less than or equal to"
+    _lte: BigDecimal
+    "Matches values that are not equal to"
+    _neq: BigDecimal
+    "Matches values that are not contained in the collection"
+    _nin: [BigDecimal]
+    "Matches value that are like the specified text"
+    _like: String
+    "Matches value that contains the specified text"
+    _contains: String
+    "Matches by string value"
+    _string: TextComparison
+}
+
+"Integer comparison filter"
+input TextComparison {
+    "Matches values that are equal to"
+    _eq: String
+    "Matches values that are greater than"
+    _gt: String
+    "Matches values that are greater than or equal to"
+    _gte: String
+    "Matches values contained in the collection"
+    _in: [String]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: String
+    "Matches values that are less than or equal to"
+    _lte: String
+    "Matches values that are not equal to"
+    _neq: String
+    "Matches values that are not contained in the collection"
+    _nin: [String]
+    "Matches values that contain: Case Insensitive"
+    _contains: String
+    "Matches values that don't contain: Case Insensitive"
+    _ncontains: String
+    "Matches values that are like: Case Sensitive"
+    _like: String
+    "Matches values that are like: Case Sensitive"
+    _nlike: String
+    "Matches values that are like: Case Insensitive"
+    _ilike: String
+    "Matches values that are not like: Case Insensitive"
+    _nilike: String
+    "Matches values that match the reqular expression"
+    _matches: String
+    "Matches values that don't match the regular expression"
+    _nmatches: String
+    "Matches by number value"
+    _number: LongComparison
+}
+
+"Integer comparison filter"
+input TimeComparison {
+    "Matches values that are equal to"
+    _eq: String
+    "Matches values that are greater than"
+    _gt: String
+    "Matches values that are greater than or equal to"
+    _gte: String
+    "Matches values contained in the collection"
+    _in: [String]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: String
+    "Matches values that are less than or equal to"
+    _lte: String
+    "Matches values that are not equal to"
+    _neq: String
+    "Matches values that are not contained in the collection"
+    _nin: [String]
+}
+
+"Integer comparison filter"
+input BooleanComparison {
+    "Matches values that are equal to"
+    _eq: Boolean
+    "Matches values contained in the collection"
+    _in: [Boolean]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are not equal to"
+    _neq: Boolean
+    "Matches values that are not contained in the collection"
+    _nin: [Boolean]
+}
+
+"Enum comparison filter"
+input EnumComparison {
+    "Matches values that are equal to"
+    _eq: String
+    "Matches values that are greater than"
+    _gt: String
+    "Matches values that are greater than or equal to"
+    _gte: String
+    "Matches values contained in the collection"
+    _in: [String]
+    "Matches values that are null/not null"
+    _is_null: Boolean
+    "Matches values that are less than"
+    _lt: String
+    "Matches values that are less than or equal to"
+    _lte: String
+    "Matches values that are not equal to"
+    _neq: String
+    "Matches values that are not contained in the collection"
+    _nin: [String]
+}
+
+input JsonComparison {
+    key: ID!
+    _int: IntegerComparison
+    _long: LongComparison
+    _text: TextComparison
+    _length: IntegerComparison
+    _bool: BooleanComparison
+    _in: [ID!]
+    _nin: [ID!]
+}
