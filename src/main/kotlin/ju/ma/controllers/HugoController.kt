@@ -37,6 +37,7 @@ class HugoController {
     lateinit var authScopes: String
     @Value("\${hugo.github.token:}")
     lateinit var githubToken: String
+    val redirectUrl: String = "https://lambeth-techaid.ju.ma/api"
 
     private val controller: AuthenticationController by lazy {
         AuthenticationController.newBuilder(authDomain, authClientId, authClientSecret)
@@ -54,7 +55,7 @@ class HugoController {
         req: HttpServletRequest,
         res: HttpServletResponse
     ): ModelAndView {
-        val redirectUrl = "http://localhost:8080/hugo-verify?provider=$provider&site_id=$siteId&scope=$scope"
+        val redirectUrl = "$redirectUrl/hugo-verify?provider=$provider&site_id=$siteId&scope=$scope"
         val authorizeUrl = controller.buildAuthorizeUrl(req, res, redirectUrl)
             .withScope(authScopes)
             .withAudience(authAudience)
@@ -75,7 +76,7 @@ class HugoController {
             "provider" to provider
         )
         val message = try {
-            val redirectUrl = "http://localhost:8080/hugo-verify"
+            val redirectUrl = "$redirectUrl/hugo-verify"
             val tokens = controller.handle(CustomRequesWrapper(redirectUrl, req), res)
 
             if (!tokens.accessToken.isNullOrBlank()) {
