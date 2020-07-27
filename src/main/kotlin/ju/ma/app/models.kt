@@ -265,7 +265,7 @@ class KitAttributes(
     var credentials: String? = null,
     var status: List<String> = listOf(),
     var network: String? = null,
-    var otherNetwork: String? = null
+    var otherNetwork: String? = "UNKNOWN"
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

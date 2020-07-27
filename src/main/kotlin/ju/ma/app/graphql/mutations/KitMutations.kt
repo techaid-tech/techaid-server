@@ -278,6 +278,7 @@ data class KitAttributesInput(
             credentials = self.credentials
             images = imageMap.values.toMutableList()
             notes = self.notes ?: notes
+            network = self.network ?: "UNKNOWN"
         }
     }
 }
