@@ -17,8 +17,8 @@ spec:
     cronExpression: "@every 24h"
     storageSecretName: kubedb-snapshot-secret
     s3:
-      endpoint: ams3.digitaloceanspaces.com
-      bucket: stretech-db
+      endpoint: s3.eu-west-1.amazonaws.com
+      bucket: db.retinue.io
     podTemplate:
       spec:
         resources:
@@ -32,8 +32,8 @@ spec:
       storage:
         storageSecretName: kubedb-snapshot-secret
         s3:
-          bucket: stretech-db
-          endpoint: ams3.digitaloceanspaces.com
+          bucket: db.retinue.io
+          endpoint: s3.eu-west-1.amazonaws.com
   monitor:
     agent: prometheus.io/coreos-operator
     prometheus:
@@ -47,6 +47,6 @@ spec:
         s3:
           bucket: stretech-db
           endpoint: ams3.digitaloceanspaces.com
-          prefix: "kubedb/db/stretech-db/archive"
+          prefix: "kubedb/apps/stretech-db/archive"
 
 # kubectl exec -it -n apps stretech-db-0 -- psql -U postgres -c 'CREATE database stretech;'

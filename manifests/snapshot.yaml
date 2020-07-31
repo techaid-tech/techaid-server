@@ -1,0 +1,13 @@
+apiVersion: kubedb.com/v1alpha1
+kind: Snapshot
+metadata:
+  name: techaid-snapshot
+  namespace: apps
+  labels:
+    kubedb.com/kind: Postgres
+spec:
+  databaseName: stretech-db
+  storageSecretName: kubedb-snapshot-secret
+  s3:
+    bucket: db.retinue.io
+    endpoint: s3.eu-west-1.amazonaws.com
