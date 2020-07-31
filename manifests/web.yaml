@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: stretech-svc
+  name: techaid-server-svc
   namespace: apps
 spec:
   type: ClusterIP
@@ -9,28 +9,28 @@ spec:
     - port: 8080
       targetPort: 8080
   selector:
-    app: stretech
+    app: techaid-server
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: apps
-  name: stretech
+  name: techaid-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stretech
+      app: techaid-server
   template:
     metadata:
       labels:
-        app: stretech
+        app: techaid-server
     spec:
       imagePullSecrets:
         - name: gcr-regcred
       containers:
-        - image: eu.gcr.io/retinue-io/stretech:latest
-          name: stretech-web
+        - image: eu.gcr.io/retinue-io/techaid-server
+          name: techaid-server-web
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
@@ -46,8 +46,8 @@ spec:
           env:
           envFrom:
             - configMapRef:
-                name: stretech-config
+                name: techaid-server-config
             - secretRef:
                 name: stretech-db-auth
             - secretRef:
-                name: stretech-secret
+                name: techaid-server-secret

@@ -1,4 +1,7 @@
 # Covid TechAid 
+
+[![CircleCi](https://circleci.com/gh/techaid-tech/techaid-server.svg?style=svg)](https://circleci.com/gh/techaid-tech/techaid-server)
+
 Provides backing services for the dashboard site at https://lambeth-techaid.ju.ma/app/
 
 ```bash

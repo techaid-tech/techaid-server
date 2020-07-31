@@ -1,8 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: stretech-config
+  name: techaid-server-config
   namespace: apps
+  annotations:
+    strategy.spinnaker.io/max-version-history: "3"
 data:
-  DATASOURCE_URL: "jdbc:postgresql://stretech-db.apps.svc:5432/stretech"
   SPRING_PROFILES_ACTIVE: "production"
