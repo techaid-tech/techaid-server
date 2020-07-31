@@ -48,11 +48,11 @@ jobs:
           key: v1-build-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
-          image: techaid-dashboard
+          image: techaid-server
           registry-url: eu.gcr.io
           tag: prod-${CIRCLE_SHA1:0:7}
       - gcp-gcr/push-image:
-          image: techaid-dashboard
+          image: techaid-server
           registry-url: eu.gcr.io
           tag: prod-${CIRCLE_SHA1:0:7}
 orbs:
