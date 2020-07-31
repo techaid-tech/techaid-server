@@ -296,7 +296,9 @@ enum class KitStatus {
     READY,
     ALLOCATED,
     DELIVERY_ARRANGED,
-    DELIVERED
+    DELIVERED,
+    INCOMPLETE,
+    RECYCLED
 }
 
 enum class KitVolunteerType { LOGISTICS, ORGANISER, TECHNICIAN }
