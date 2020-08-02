@@ -177,6 +177,7 @@ class Kit(
     var model: String,
     var location: String,
     var age: Int,
+    @Type(type = "yes_no")
     var archived: Boolean = false,
     var createdAt: Instant = Instant.now(),
     @UpdateTimestamp
@@ -405,6 +406,7 @@ class Organisation(
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
     var attributes: OrganisationAttributes = OrganisationAttributes(),
+    @Type(type = "yes_no")
     var archived: Boolean = false,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "volunteer_id")

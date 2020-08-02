@@ -26,14 +26,14 @@ interface KitTypeCount {
 interface KitRepository : PagingAndSortingRepository<Kit, Long>, QuerydslPredicateExecutor<Kit> {
     @Query(
         """
-        SELECT k.status AS status, count(*) AS count from Kit k where k.archived != true group by k.status 
+        SELECT k.status AS status, count(*) AS count from Kit k where k.archived != 'Y' group by k.status 
     """
     )
     fun statusCount(): List<KitStatusCount>
 
     @Query(
         """
-        SELECT k.type AS type, count(*) AS count from Kit k where k.archived != true group by k.type
+        SELECT k.type AS type, count(*) AS count from Kit k where k.archived != 'Y' group by k.type
     """
     )
     fun typeCount(): List<KitTypeCount>
@@ -69,7 +69,7 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
               coalesce((attributes->'request'->'other')\:\:int +  (attributes->'alternateRequest'->'other')\:\:int, 0) as other,
               coalesce((attributes->'request'->'chromebooks')\:\:int +  (attributes->'alternateRequest'->'chromebooks')\:\:int, 0) as chromebooks 
           FROM organisations org
-          WHERE org.archived != true
+          WHERE org.archived != 'Y' 
         ) AS src
     """,
         nativeQuery = true
