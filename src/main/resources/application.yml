@@ -44,6 +44,10 @@ server:
     max-http-form-post-size: 50MB
   forward-headers-strategy: NATIVE
 
+metabase:
+  site-url: ${METABASE_SITE_URL}
+  secret-key: ${METABASE_SECRET_KEY}
+
 hugo:
   github:
     token: ${HUGO_GITHUB_TOKEN:}

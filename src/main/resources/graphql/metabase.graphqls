@@ -1,0 +1,9 @@
+type MetabaseDashboardPayload {
+    id: ID!
+    token: String!
+    url: String!
+}
+
+extend type Query {
+    metabaseDashboard(ids: [ID!]) : [MetabaseDashboardPayload!]
+}

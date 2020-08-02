@@ -139,7 +139,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-config'
     implementation 'com.auth0:auth0:1.15.0'
     compile 'com.auth0:mvc-auth-commons:1.+'
-
+    implementation 'com.auth0:java-jwt:3.10.3'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
