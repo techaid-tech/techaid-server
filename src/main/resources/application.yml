@@ -45,8 +45,8 @@ server:
   forward-headers-strategy: NATIVE
 
 metabase:
-  site-url: ${METABASE_SITE_URL}
-  secret-key: ${METABASE_SECRET_KEY}
+  site-url: ${METABASE_SITE_URL:}
+  secret-key: ${METABASE_SECRET_KEY:}
 
 hugo:
   github:
