@@ -1,0 +1,25 @@
+apiVersion: config.lighthouse.jenkins-x.io/v1alpha1
+kind: TriggerConfig
+spec:
+  presubmits:
+    - name: ci-build-techaid-server
+      context: "ci: build"
+      always_run: true
+      optional: false
+      trigger: "/test web"
+      rerun_command: "/retest web"
+      source: "build.yaml"
+    - name: ci-deploy-techaid-server
+      context: "ci: deploy-staging"
+      always_run: false
+      optional: false
+      trigger: "/deploy staging"
+      rerun_command: "/redeploy staging"
+      source: "deploy.yaml"
+      pipeline_run_params:
+        - name: IMAGE_PREFIX
+          value_template: staging-
+  branchProtection:
+    contexts:
+      - "ci: build"
+      - "ci: deploy-staging"

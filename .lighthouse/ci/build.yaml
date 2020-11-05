@@ -1,0 +1,52 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-
+spec:
+  serviceAccountName: app-builder
+  pipelineSpec:
+    workspaces:
+      - name: shared-workspace
+    params:
+      - name: REPO_NAME
+        type: string
+        description: The git repository URL to clone from.
+      - name: REPO_URL
+        type: string
+        description: The url for the repo
+      - name: PULL_PULL_SHA
+        type: string
+        description: The branch to clone from the repo
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+        workspaces:
+          - name: output
+            workspace: shared-workspace
+        params:
+          - name: url
+            value: $(params.REPO_URL)
+          - name: revision
+            value: $(params.PULL_PULL_SHA)
+          - name: deleteExisting
+            value: "true"
+      - name: run-tests
+        runAfter:
+          - fetch-repository
+        workspaces:
+          - name: source
+            workspace: shared-workspace
+        taskSpec:
+          workspaces:
+            - name: source
+          steps:
+            - image: gradle:6.0.1-jdk11
+              name: run-tests
+              script: |
+                #!/bin/sh
+                gradle test
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: buildpacks-source-pvc

@@ -1,0 +1,118 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: build-pipeline-run-
+spec:
+  serviceAccountName: app-builder-staging
+  pipelineSpec:
+    workspaces:
+      - name: shared-workspace
+    params:
+      - name: REPO_NAME
+        type: string
+        description: The git repository URL to clone from.
+        default: prow-test
+      - name: REPO_URL
+        type: string
+        default: https://github.com/techaid-tech/prow-test.git
+        description: The url for the repo
+      - name: PULL_PULL_SHA
+        type: string
+        default: HEAD
+        description: The branch to clone from the repo
+      - name: IMAGE_PREFIX
+        description: The prefix to add to the docker image tag
+        default: "staging-"
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+        workspaces:
+          - name: output
+            workspace: shared-workspace
+        params:
+          - name: url
+            value: $(params.REPO_URL)
+          - name: revision
+            value: $(params.PULL_PULL_SHA)
+          - name: deleteExisting
+            value: "true"
+      - name: shorten-commit-hash
+        runAfter:
+          - fetch-repository
+        params:
+          - name: commit-hash
+            value: $(tasks.fetch-repository.results.commit)
+        taskSpec:
+          params:
+            - name: commit-hash
+          results:
+            - name: commit
+              description: The precise commit SHA that was fetched by this Task
+          steps:
+            - image: zshusers/zsh:4.3.15
+              name: shorten
+              script: |
+                #!/usr/bin/env zsh
+                RESULT_SHA="$(echo -n "$(params.commit-hash)" | cut -c1-7)"
+                echo -n "$RESULT_SHA"> $(results.commit.path)
+      - name: build-push
+        taskRef:
+          name: kaniko
+        runAfter:
+          - shorten-commit-hash
+        workspaces:
+          - name: source
+            workspace: shared-workspace
+        params:
+          - name: IMAGE
+            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+      - name: release-app
+        runAfter:
+          - build-push
+        workspaces:
+          - name: source
+            workspace: shared-workspace
+        params:
+          - name: IMAGE
+            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+          - name: PULL_PULL_SHA
+            value: "$(params.PULL_PULL_SHA)"
+          - name: REPO_URL
+            value: $(params.REPO_URL)
+          - name: IMAGE_TAG
+            value: "$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+          - name: IMAGE_REPO
+            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME)"
+        taskSpec:
+          params:
+            - name: IMAGE
+            - name: PULL_PULL_SHA
+            - name: REPO_URL
+            - name: IMAGE_TAG
+            - name: IMAGE_REPO
+          workspaces:
+            - name: source
+          steps:
+            - image: k8s.gcr.io/hyperkube:v1.12.1
+              name: release
+              script: |
+                #!/usr/bin/env sh
+                set -x
+                apt-get update && apt-get install -y gettext-base
+                NAMESPACE="staging"
+                DOCKER_IMAGE_REPO="$(params.IMAGE_REPO)"
+                DOCKER_IMAGE_TAG="$(params.IMAGE_TAG)"
+                GIT_REVISION="$(params.PULL_PULL_SHA)"
+                GIT_REPO="$(params.REPO_URL)"
+
+                envsubst < $(workspaces.source.path)/charts/app.yaml | kubectl apply -f -
+  workspaces:
+    - name: shared-workspace
+      persistentvolumeclaim:
+        claimName: buildpacks-source-pvc
+  podTemplate:
+    volumes:
+      - name: buildpacks-cache
+        persistentVolumeClaim:
+          claimName: buildpacks-cache-pvc
