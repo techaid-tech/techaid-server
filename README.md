@@ -24,6 +24,7 @@ https://accounts.google.com/o/oauth2/v2/auth \
  -d access_type=offline
  
 # Exchange code for access token and refresh token 
+# TODO: Implement google app
 curl -X POST \
  -d code=<code> \
  -d client_id=<client_id> \
