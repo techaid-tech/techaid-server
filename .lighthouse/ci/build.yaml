@@ -44,7 +44,7 @@ spec:
             - image: circleci/openjdk:8-jdk
               name: run-tests
               script: |
-                #!/bin/sh
+                #!/bin/bash
                 gradle -p $(workspaces.source.path) test
   workspaces:
     - name: shared-workspace
