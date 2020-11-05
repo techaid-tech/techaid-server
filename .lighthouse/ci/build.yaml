@@ -41,7 +41,7 @@ spec:
           workspaces:
             - name: source
           steps:
-            - image: gradle:6.7.0-jdk15-openj9
+            - image: gradle:6.7-jdk11
               name: run-tests
               script: |
                 #!/bin/bash
