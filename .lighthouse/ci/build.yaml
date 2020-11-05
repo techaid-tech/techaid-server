@@ -41,11 +41,11 @@ spec:
           workspaces:
             - name: source
           steps:
-            - image: gradle:6.0.1-jdk11
+            - image: gradle:6.2.2-jdk11
               name: run-tests
               script: |
                 #!/bin/sh
-                gradle  -p $(workspaces.source.path) test
+                gradle --no-daemon -p $(workspaces.source.path) test
   workspaces:
     - name: shared-workspace
       persistentvolumeclaim:
