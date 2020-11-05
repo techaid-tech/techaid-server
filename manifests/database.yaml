@@ -19,34 +19,34 @@ spec:
     s3:
       endpoint: s3.eu-west-1.amazonaws.com
       bucket: db.retinue.io
-    podTemplate:
-      spec:
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-    archiver:
-      storage:
-        storageSecretName: kubedb-snapshot-secret
-        s3:
-          bucket: db.retinue.io
-          endpoint: s3.eu-west-1.amazonaws.com
-  monitor:
-    agent: prometheus.io/coreos-operator
-    prometheus:
-      namespace: cattle-prometheus
-      labels:
-        k8s-app: prometheus
-      interval: 10s
-    init:
-      postgresWAL:
-        storageSecretName: kubedb-snapshot-secret
-        s3:
-          bucket: stretech-db
-          endpoint: ams3.digitaloceanspaces.com
-          prefix: "kubedb/apps/stretech-db/archive"
+#    podTemplate:
+#      spec:
+#        resources:
+#          requests:
+#            memory: "64Mi"
+#            cpu: "250m"
+#          limits:
+#            memory: "128Mi"
+#            cpu: "500m"
+  archiver:
+    storage:
+      storageSecretName: kubedb-snapshot-secret
+      s3:
+        bucket: db.retinue.io
+        endpoint: s3.eu-west-1.amazonaws.com
+#  monitor:
+#    agent: prometheus.io/coreos-operator
+#    prometheus:
+#      namespace: cattle-prometheus
+#      labels:
+#        k8s-app: prometheus
+#      interval: 10s
+#    init:
+#      postgresWAL:
+#        storageSecretName: kubedb-snapshot-secret
+#        s3:
+#          bucket: stretech-db
+#          endpoint: ams3.digitaloceanspaces.com
+#          prefix: "kubedb/apps/stretech-db/archive"
 
 # kubectl exec -it -n apps stretech-db-0 -- psql -U postgres -c 'CREATE database stretech;'
