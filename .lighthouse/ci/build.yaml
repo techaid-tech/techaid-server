@@ -45,7 +45,7 @@ spec:
               name: run-tests
               script: |
                 #!/bin/sh
-                gradle test
+                gradle  -p $(workspaces.source.path) test
   workspaces:
     - name: shared-workspace
       persistentvolumeclaim:
