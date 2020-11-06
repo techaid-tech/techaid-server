@@ -13,8 +13,8 @@ spec:
       context: "ci-deploy-staging"
       always_run: false
       optional: false
-      trigger: "/deploy staging"
-      rerun_command: "/redeploy staging"
+      trigger: "/test deploy"
+      rerun_command: "/retest deploy"
       source: "deploy.yaml"
       pipeline_run_params:
         - name: IMAGE_PREFIX
