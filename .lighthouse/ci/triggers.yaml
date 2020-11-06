@@ -14,7 +14,7 @@ spec:
       always_run: false
       optional: false
       trigger: "/test deploy"
-      rerun_command: "/retest deploy"
+      rerun_command: "/test deploy"
       source: "deploy.yaml"
       pipeline_run_params:
         - name: IMAGE_PREFIX
