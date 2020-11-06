@@ -109,7 +109,7 @@ spec:
           workspaces:
             - name: source
           steps:
-            - image: k8s.gcr.io/hyperkube:v1.12.1
+            - image: eu.gcr.io/techaid-tech/k8s:1.18.2
               name: release
               script: |
                 #!/usr/bin/env sh
@@ -127,6 +127,8 @@ spec:
       persistentvolumeclaim:
         claimName: buildpacks-source-pvc
   podTemplate:
+    imagePullSecrets:
+      - name: gcr-regcred
     volumes:
       - name: buildpacks-cache
         persistentVolumeClaim:
