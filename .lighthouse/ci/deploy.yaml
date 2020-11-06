@@ -75,7 +75,7 @@ spec:
         taskRef:
           name: kaniko
         runAfter:
-          - shorten-commit-hash
+          - gradle-build
         workspaces:
           - name: source
             workspace: shared-workspace
