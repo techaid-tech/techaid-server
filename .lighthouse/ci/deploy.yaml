@@ -56,6 +56,21 @@ spec:
                 #!/usr/bin/env zsh
                 RESULT_SHA="$(echo -n "$(params.commit-hash)" | cut -c1-7)"
                 echo -n "$RESULT_SHA"> $(results.commit.path)
+      - name: gradle-build
+        runAfter:
+          -  git-clone
+        workspaces:
+          - name: source
+            workspace: shared-workspace
+        taskSpec:
+          workspaces:
+            - name: source
+          steps:
+            - image: gradle:6.7-jdk11
+              name: gradle-build
+              script: |
+                #!/bin/bash
+                gradle -p $(workspaces.source.path) build -x test
       - name: build-push
         taskRef:
           name: kaniko
