@@ -112,15 +112,13 @@ spec:
             - image: eu.gcr.io/techaid-tech/k8s:1.18.2
               name: release
               script: |
-                #!/usr/bin/env sh
+                #!/usr/bin/env bash
                 set -x
-                apt-get update && apt-get install -y gettext-base
-                NAMESPACE="staging"
-                DOCKER_IMAGE_REPO="$(params.IMAGE_REPO)"
-                DOCKER_IMAGE_TAG="$(params.IMAGE_TAG)"
-                GIT_REVISION="$(params.PULL_PULL_SHA)"
-                GIT_REPO="$(params.REPO_URL)"
-
+                export NAMESPACE="staging"
+                export DOCKER_IMAGE_REPO="$(params.IMAGE_REPO)"
+                export DOCKER_IMAGE_TAG="$(params.IMAGE_TAG)"
+                export GIT_REVISION="$(params.PULL_PULL_SHA)"
+                export GIT_REPO="$(params.REPO_URL)"
                 envsubst < $(workspaces.source.path)/charts/app.yaml | kubectl apply -f -
   workspaces:
     - name: shared-workspace
