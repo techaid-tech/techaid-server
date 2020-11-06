@@ -58,7 +58,7 @@ spec:
                 echo -n "$RESULT_SHA"> $(results.commit.path)
       - name: gradle-build
         runAfter:
-          -  git-clone
+          -  fetch-repository
         workspaces:
           - name: source
             workspace: shared-workspace
