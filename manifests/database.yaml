@@ -2,7 +2,7 @@ apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
   name: stretech-db
-  namespace: apps
+  namespace: staging
 spec:
   version: "11.2"
   storageType: Durable
