@@ -13,6 +13,7 @@ spec:
       requests:
         storage: {{ .Values.db.storage }}
   terminationPolicy: {{ .Values.db.terminationPolicy }}
+  updateStrategy: RollingUpdate
   backupSchedule:
     cronExpression: {{ quote .Values.db.cronExpression }}
     storageSecretName: {{ .Values.db.s3.secret }}
