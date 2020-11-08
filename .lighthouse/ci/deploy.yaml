@@ -108,6 +108,7 @@ spec:
             - name: REPO_URL
             - name: IMAGE_TAG
             - name: IMAGE_REPO
+            - name: IMAGE_PREFIX
           workspaces:
             - name: source
           steps:
