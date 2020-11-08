@@ -41,7 +41,8 @@ spec:
 ---
 {{- if .Values.db.create }}
 apiVersion: v1
-name: {{ include "app.fullname" . }}-init-sql
+metadata:
+  name: {{ include "app.fullname" . }}-init-sql
 kind: ConfigMap
 data:
   init.sql: |-
