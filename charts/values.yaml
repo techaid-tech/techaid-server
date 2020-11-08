@@ -27,6 +27,7 @@ envFrom: []
 db:
   version: "11.2"
   create: true
+  replicas: 1
   storage: 5Gi
   cronExpression: "@every 24h"
   terminationPolicy: WipeOut

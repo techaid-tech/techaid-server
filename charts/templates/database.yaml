@@ -4,6 +4,7 @@ metadata:
   name: {{ include "app.fullname" . }}-db
 spec:
   version: {{ quote .Values.db.version }}
+  replicas: {{ .Values.db.replicas }}
   storageType: Durable
   storage:
     accessModes:
