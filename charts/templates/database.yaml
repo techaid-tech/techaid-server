@@ -1,0 +1,49 @@
+apiVersion: kubedb.com/v1alpha1
+kind: Postgres
+metadata:
+  name: {{ include "app.fullname" . }}-db
+spec:
+  version: {{ quote .Values.db.version }}
+  storageType: Durable
+  storage:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: {{ .Values.db.storage }}
+  terminationPolicy: {{ .Values.db.terminationPolicy }}
+  backupSchedule:
+    cronExpression: {{ quote .Values.db.cronExpression }}
+    storageSecretName: {{ .Values.db.s3.secret }}
+    s3:
+      bucket: {{ .Values.db.s3.bucket }}
+      endpoint: {{ .Values.db.s3.endpoint }}
+  archiver:
+    storage:
+      storageSecretName: {{ .Values.db.s3.secret }}
+      s3:
+        bucket: {{ .Values.db.s3.bucket }}
+        endpoint: {{ .Values.db.s3.endpoint }}
+  init:
+    {{- if .Values.db.create }}
+    scriptSource:
+      configMap:
+        name: {{ include "app.fullname" . }}-init-sql
+    {{- end }}
+    {{- if .Values.db.wal.enabled }}
+    postgresWAL:
+      storageSecretName: {{ .Values.db.s3.secret }}
+      s3:
+        bucket: {{ .Values.db.s3.bucket }}
+        endpoint: {{ .Values.db.s3.endpoint }}
+        prefix:  {{ .Values.db.wal.prefix }}
+    {{- end }}
+---
+{{- if .Values.db.create }}
+apiVersion: v1
+name: {{ include "app.fullname" . }}-init-sql
+data:
+  init.sql: |-
+    SELECT 'CREATE DATABASE {{ .Values.db.name }}'
+    WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '{{ .Values.db.name }}'')\gexec
+{{- end }}

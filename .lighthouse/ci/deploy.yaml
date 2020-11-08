@@ -22,7 +22,7 @@ spec:
         description: The branch to clone from the repo
       - name: IMAGE_PREFIX
         description: The prefix to add to the docker image tag
-        default: "staging-"
+        default: "staging"
     tasks:
       - name: fetch-repository
         taskRef:
@@ -81,7 +81,7 @@ spec:
             workspace: shared-workspace
         params:
           - name: IMAGE
-            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)-$(tasks.shorten-commit-hash.results.commit)"
       - name: release-app
         runAfter:
           - build-push
@@ -90,13 +90,15 @@ spec:
             workspace: shared-workspace
         params:
           - name: IMAGE
-            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+            value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME):$(params.IMAGE_PREFIX)-$(tasks.shorten-commit-hash.results.commit)"
           - name: PULL_PULL_SHA
             value: "$(params.PULL_PULL_SHA)"
           - name: REPO_URL
             value: $(params.REPO_URL)
+          - name: IMAGE_PREFIX
+            value: $(params.IMAGE_PREFIX)
           - name: IMAGE_TAG
-            value: "$(params.IMAGE_PREFIX)$(tasks.shorten-commit-hash.results.commit)"
+            value: "$(params.IMAGE_PREFIX)-$(tasks.shorten-commit-hash.results.commit)"
           - name: IMAGE_REPO
             value: "eu.gcr.io/techaid-tech/$(params.REPO_NAME)"
         taskSpec:
@@ -109,17 +111,17 @@ spec:
           workspaces:
             - name: source
           steps:
-            - image: eu.gcr.io/techaid-tech/k8s:1.18.2
+            - image: eu.gcr.io/techaid-tech/k8s:1.18.201
               name: release
               script: |
                 #!/usr/bin/env bash
                 set -x
-                export NAMESPACE="staging"
+                export NAMESPACE="$(params.IMAGE_PREFIX)"
                 export DOCKER_IMAGE_REPO="$(params.IMAGE_REPO)"
                 export DOCKER_IMAGE_TAG="$(params.IMAGE_TAG)"
                 export GIT_REVISION="$(params.PULL_PULL_SHA)"
                 export GIT_REPO="$(params.REPO_URL)"
-                envsubst < $(workspaces.source.path)/charts/app.yaml | kubectl apply -f -
+                envsubst < $(workspaces.source.path)/charts/app-$(params.IMAGE_PREFIX).yaml | kubectl apply -f -
   workspaces:
     - name: shared-workspace
       persistentvolumeclaim:

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: techaid-api
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: ${NAMESPACE}
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      version: v3
+      valueFiles:
+      - values.yaml
+      - secrets.${NAMESPACE}.yaml
+      parameters:
+      - name: image.repository
+        value: ${DOCKER_IMAGE_REPO}
+      - name: image.tag 
+        value: ${DOCKER_IMAGE_TAG}
+    path: charts/app
+    repoURL: ${GIT_REPO}
+    targetRevision: ${GIT_REVISION}
+  syncPolicy:
+    automated: {}
+---
