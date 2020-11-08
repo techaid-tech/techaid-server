@@ -1,4 +1,4 @@
-# Covid TechAid 
+# TechAid Api
 
 Provides backing services for the dashboard site at https://lambeth-techaid.ju.ma/app/
 
