@@ -21,7 +21,7 @@ spec:
         value: ${DOCKER_IMAGE_REPO}
       - name: image.tag 
         value: ${DOCKER_IMAGE_TAG}
-    path: charts/app
+    path: charts/
     repoURL: ${GIT_REPO}
     targetRevision: ${GIT_REVISION}
   syncPolicy:
