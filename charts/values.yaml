@@ -25,10 +25,12 @@ envFrom: []
 # - configMapRef:
 #     name: config-file
 db:
-  version: "11.2"
+  version: "12"
+  teamId: techaid
   create: true
   replicas: 1
   storage: 5Gi
+  username: techaid
   cronExpression: "@every 24h"
   terminationPolicy: WipeOut
   name: techaid-server
@@ -37,7 +39,7 @@ db:
     prefix:
   s3:
     bucket: db-techaid-tech
-    endpoint: s3.eu-west-1.amazonaws.com
+    endpoint: s3.eu-west-2.amazonaws.com
     secret: kubedb-snapshot-secret
 ## Expose the superset service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
