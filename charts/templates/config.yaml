@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "app.fullname" . }}-config
 data:
-  DATASOURCE_URL: "jdbc:postgresql://name: {{ include "app.fullname" . }}-db.svc:5432/{{ .Values.db.name }}"
+  DATASOURCE_URL: "jdbc:postgresql://name: {{ include "app.fullname" . }}-db:5432/{{ .Values.db.name }}"
   {{- with .Values.configData }}
   {{- . | toYaml | nindent 2 }}
   {{- end }}
