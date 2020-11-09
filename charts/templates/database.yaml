@@ -18,7 +18,6 @@ spec:
     storageSecretName: {{ .Values.db.s3.secret }}
     s3:
       bucket: {{ .Values.db.s3.bucket }}
-      endpoint: {{ .Values.db.s3.endpoint }}
   archiver:
     storage:
       storageSecretName: {{ .Values.db.s3.secret }}
