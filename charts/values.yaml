@@ -32,7 +32,7 @@ db:
   username: techaid
   cronExpression: "@every 24h"
   terminationPolicy: WipeOut
-  name: techaid-server
+  name: techaid_server
   wal:
     enabled: false
     prefix:

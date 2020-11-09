@@ -49,4 +49,4 @@ spec:
 #          endpoint: ams3.digitaloceanspaces.com
 #          prefix: "kubedb/apps/stretech-db/archive"
 
-# kubectl exec -it -n apps stretech-db-0 -- psql -U postgres -c 'CREATE database stretech;'
+# kubectl exec -it -n apps techaid-api-db-0 -- psql -U postgres -c 'CREATE database techaid-server;'
