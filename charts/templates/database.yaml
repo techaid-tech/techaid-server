@@ -1,4 +1,4 @@
-apiVersion: kubedb.com/v1alpha2
+apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
   name: {{ include "app.fullname" . }}-db
@@ -23,7 +23,6 @@ spec:
       storageSecretName: {{ .Values.db.s3.secret }}
       s3:
         bucket: {{ .Values.db.s3.bucket }}
-        endpoint: {{ .Values.db.s3.endpoint }}
   init:
     {{- if .Values.db.create }}
     scriptSource:
@@ -35,8 +34,6 @@ spec:
       storageSecretName: {{ .Values.db.s3.secret }}
       s3:
         bucket: {{ .Values.db.s3.bucket }}
-        endpoint: {{ .Values.db.s3.endpoint }}
-        prefix:  {{ .Values.db.wal.prefix }}
     {{- end }}
 ---
 {{- if .Values.db.create }}
@@ -49,3 +46,4 @@ data:
     SELECT 'CREATE DATABASE {{ .Values.db.name }}'
     WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '{{ .Values.db.name }}'')\gexec
 {{- end }}
+---
