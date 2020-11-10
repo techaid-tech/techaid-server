@@ -14,7 +14,7 @@ spec:
     helm:
       version: v3
       valueFiles:
-      - values.yaml
+      - values.production.yaml
       - secrets.${NAMESPACE}.yaml
       parameters:
       - name: image.repository

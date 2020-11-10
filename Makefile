@@ -21,4 +21,4 @@ push:
 release: build push
 
 deploy:
-	cat .lighthouse/ci/deploy.yaml | sed 's/default: "staging"/default: "production"/' | kubectl apply -f -
+	cat .lighthouse/ci/deploy.yaml | sed 's/default: "staging"/default: "production"/' | kubectl create -f -

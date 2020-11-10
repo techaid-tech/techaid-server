@@ -1,0 +1,159 @@
+replicaCount: 1
+app:
+  namespace: staging
+  repo: https://github.com/techaid-tech/techaid-server.git
+  revision: HEAD
+  profiles:
+    active: production
+secrets:
+  data: {}
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+## Set default image, imageTag, and imagePullPolicy.
+image:
+  repository: "eu.gcr.io/techaid-tech/techaid-server"
+  tag: "staging-0.0.1"
+  pullPolicy: "IfNotPresent"
+  pullSecrets:
+  - name: gcr-regcred
+## Extra environment variables that will be passed onto deployment pod
+##
+configData: {}
+extraEnv:
+  SPRING_PROFILES_ACTIVE: 'production'
+envFrom: []
+# - configMapRef:
+#     name: config-file
+db:
+  version: "11.2"
+  create: true
+  replicas: 1
+  storage: 5Gi
+  username: techaid
+  cronExpression: "@every 24h"
+  terminationPolicy: WipeOut
+  name: techaid_server
+  wal:
+    enabled: false
+    prefix:
+  s3:
+    bucket: db-techaid-tech
+    endpoint: s3.eu-west-2.amazonaws.com
+    secret: kubedb-snapshot-secret
+## Expose the superset service to be accessed from outside the cluster (LoadBalancer service).
+## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  ## service annotations
+  annotations: {}
+  ## loadbalancer source ranges. only used when service.type is "LoadBalancer"
+  loadBalancerSourceRanges: []
+  # - 172.31.0.0/16
+ingress:
+  ## If true, Ingress will be created
+  ##
+  enabled: true
+
+  ## Ingress annotations
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # kubernetes.io/ingress.class: nginx cert-manager.io/cluster-issuer
+  # kubernetes.io/tls-acme: 'true'
+
+  ## Must be provided if Ingress is enabled
+  ##
+  hosts:
+    - techaid-api.techaid.tech
+
+  ## App Ingress path
+  ## Optional, allows specifying paths for more flexibility
+  ## E.g. Traefik ingress likes paths
+  ##
+  path: /
+
+  ## superset Ingress TLS configuration
+  ## Secrets must be manually created in the namespace
+  ##
+  tls:
+    - hosts:
+        - techaid-api.techaid.tech
+      secretName: techaid-server-ingress
+  #   - secretName: prow-test-server-tls
+  #     hosts:
+  #       - superset.domain.com
+## Node labels for pod assignment
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+## Tolerations
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+tolerations: []
+## Affinity and anti-affinity
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources: {}
+#  requests:
+#    cpu: 50m
+#    memory: 256Mi
+#  limits:
+#    cpu: 500m
+#    memory: 750Mi
+## Configure liveness/readiness params
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+##
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: http
+  initialDelaySeconds: 80
+  timeoutSeconds: 5
+  periodSeconds: 10
+  failureThreshold: 2
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  periodSeconds: 10
+  failureThreshold: 2
+
+persistence:
+
+  ## If true, superset server will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
+  enabled: false
+
+  ## superset data Persistent Volume access modes
+  ## Must match those of existing PV or dynamic provisioner
+  ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  accessModes:
+    - ReadWriteOnce
+
+  ## superset data Persistent Volume size
+  ##
+  size: 8Gi
+
+  ## superset server data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+
+  ## Superset data Persistent Volume existing claim name
+  ## Requires server.persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  existingClaim: ""
