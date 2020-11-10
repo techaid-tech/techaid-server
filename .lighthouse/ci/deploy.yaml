@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   generateName: build-pipeline-run-
+  namespace: lighthouse
 spec:
   serviceAccountName: app-builder-staging
   pipelineSpec:
@@ -11,10 +12,10 @@ spec:
       - name: REPO_NAME
         type: string
         description: The git repository URL to clone from.
-        default: prow-test
+        default: techaid-server
       - name: REPO_URL
         type: string
-        default: https://github.com/techaid-tech/prow-test.git
+        default: https://github.com/techaid-tech/techaid-server.git
         description: The url for the repo
       - name: PULL_PULL_SHA
         type: string

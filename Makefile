@@ -19,3 +19,6 @@ push:
 	docker push $(REGISTRY)/$(REPOSITORY_NAME):latest
 
 release: build push
+
+deploy:
+	cat .lighthouse/ci/deploy.yaml | sed 's/default: "staging"/default: "production"/' | kubectl apply -f -
