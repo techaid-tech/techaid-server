@@ -71,7 +71,7 @@ spec:
               name: gradle-build
               script: |
                 #!/bin/bash
-                gradle -p $(workspaces.source.path) build -x test
+                gradle --no-daemon -p $(workspaces.source.path) build -x test
       - name: build-push
         taskRef:
           name: kaniko
