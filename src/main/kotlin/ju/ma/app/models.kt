@@ -278,6 +278,7 @@ class KitImage(
 enum class KitType {
     OTHER,
     LAPTOP,
+    DESKTOP,
     TABLET,
     SMARTPHONE,
     ALLINONE,

@@ -42,6 +42,7 @@ interface KitRepository : PagingAndSortingRepository<Kit, Long>, QuerydslPredica
 interface RequestCount {
     val phones: Long
     val laptops: Long
+    val desktops: Long
     val tablets: Long
     val allInOnes: Long
     val other: Long
@@ -64,6 +65,7 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
               id,
               coalesce((attributes->'request'->'phones')\:\:int +  (attributes->'alternateRequest'->'phones')\:\:int, 0) as phones,
               coalesce((attributes->'request'->'laptops')\:\:int +  (attributes->'alternateRequest'->'laptops')\:\:int, 0) as laptops,
+              coalesce((attributes->'request'->'desktops')\:\:int +  (attributes->'alternateRequest'->'desktops')\:\:int, 0) as desktops,
               coalesce((attributes->'request'->'tablets')\:\:int +  (attributes->'alternateRequest'->'tablets')\:\:int, 0) as tablets,
               coalesce((attributes->'request'->'allInOnes')\:\:int +  (attributes->'alternateRequest'->'allInOnes')\:\:int, 0) as allInOnes,
               coalesce((attributes->'request'->'other')\:\:int +  (attributes->'alternateRequest'->'other')\:\:int, 0) as other,
