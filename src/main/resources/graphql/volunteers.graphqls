@@ -37,6 +37,7 @@ type Capacity {
     tablets: Int
     laptops: Int
     allInOnes: Int
+    desktops: Int
     other: Int
 }
 
@@ -45,6 +46,7 @@ input CapacityInput {
     tablets: Int
     laptops: Int
     allInOnes: Int
+    desktops: Int
     other: Int
 }
 
@@ -53,6 +55,7 @@ input VolunteerCapacityWhereInput {
     tablets: IntegerComparison
     laptops: IntegerComparison
     allInOnes: IntegerComparison
+    desktops: IntegerComparison
     filters: [JsonComparison!]
     AND: [VolunteerCapacityWhereInput]
     OR: [VolunteerCapacityWhereInput]

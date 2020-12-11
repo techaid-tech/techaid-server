@@ -42,9 +42,9 @@ interface KitRepository : PagingAndSortingRepository<Kit, Long>, QuerydslPredica
 interface RequestCount {
     val phones: Long
     val laptops: Long
-    val desktops: Long
     val tablets: Long
     val allInOnes: Long
+    val desktops: Long
     val other: Long
     val chromebooks: Long
 }
@@ -58,6 +58,7 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
             coalesce(sum(src.laptops),0) AS laptops,
             coalesce(sum(src.tablets),0) AS tablets,
             coalesce(sum(src.allInOnes),0) AS allInOnes,
+            coalesce(sum(src.desktops),0) AS desktops,
             coalesce(sum(src.other),0) AS other,
             coalesce(sum(src.chromebooks),0) AS chromebooks
         FROM (
@@ -65,9 +66,9 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
               id,
               coalesce((attributes->'request'->'phones')\:\:int +  (attributes->'alternateRequest'->'phones')\:\:int, 0) as phones,
               coalesce((attributes->'request'->'laptops')\:\:int +  (attributes->'alternateRequest'->'laptops')\:\:int, 0) as laptops,
-              coalesce((attributes->'request'->'desktops')\:\:int +  (attributes->'alternateRequest'->'desktops')\:\:int, 0) as desktops,
               coalesce((attributes->'request'->'tablets')\:\:int +  (attributes->'alternateRequest'->'tablets')\:\:int, 0) as tablets,
               coalesce((attributes->'request'->'allInOnes')\:\:int +  (attributes->'alternateRequest'->'allInOnes')\:\:int, 0) as allInOnes,
+              coalesce((attributes->'request'->'desktops')\:\:int +  (attributes->'alternateRequest'->'desktops')\:\:int, 0) as desktops,
               coalesce((attributes->'request'->'other')\:\:int +  (attributes->'alternateRequest'->'other')\:\:int, 0) as other,
               coalesce((attributes->'request'->'chromebooks')\:\:int +  (attributes->'alternateRequest'->'chromebooks')\:\:int, 0) as chromebooks 
           FROM organisations org
