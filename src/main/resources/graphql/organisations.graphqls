@@ -19,6 +19,7 @@ type RequestCount {
     laptops: Int
     tablets: Int
     allInOnes: Int
+    desktops: Int
     chromebooks: Int
     other: Int
 }

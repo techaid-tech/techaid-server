@@ -112,6 +112,7 @@ data class Capacity(
     val tablets: Int = 0,
     val laptops: Int = 0,
     val allInOnes: Int = 0,
+    val desktops: Int = 0,
     val other: Int = 0,
     val chromebooks: Int? = 0
 )
@@ -278,6 +279,7 @@ class KitImage(
 enum class KitType {
     OTHER,
     LAPTOP,
+    DESKTOP,
     TABLET,
     SMARTPHONE,
     ALLINONE,

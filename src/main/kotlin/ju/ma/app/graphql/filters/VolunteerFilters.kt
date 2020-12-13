@@ -110,6 +110,7 @@ class VolunteerCapacityWhereInput(
     var tablets: IntegerComparision? = null,
     var laptops: IntegerComparision? = null,
     var allInOnes: IntegerComparision? = null,
+    var desktops: IntegerComparision? = null,
     var filters: List<JsonComparison>? = null,
     var AND: MutableList<VolunteerCapacityWhereInput> = mutableListOf(),
     var OR: MutableList<VolunteerCapacityWhereInput> = mutableListOf(),
@@ -123,6 +124,7 @@ class VolunteerCapacityWhereInput(
         tablets?.let { builder.and(it.build(json.get("capacity.tablets").asInt())) }
         laptops?.let { builder.and(it.build(json.get("capacity.laptops").asInt())) }
         allInOnes?.let { builder.and(it.build(json.get("capacity.allInOnes").asInt())) }
+        desktops?.let { builder.and(it.build(json.get("capacity.desktops").asInt())) }
         filters?.let { filter ->
             filter.forEach { builder.and(it.build(json.get("capacity"))) }
         }
