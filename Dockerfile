@@ -1,6 +1,5 @@
 FROM gradle:6.0.1-jdk11  as builder
 USER root
-COPY ./.git /app/.git
 COPY ./src /app/src
 COPY ./build.gradle settings.gradle /app/
 RUN gradle -p /app clean build -x test
