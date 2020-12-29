@@ -45,8 +45,7 @@ jobs:
     docker:
       - image: alpine:3.6
     steps:
-      - restore_cache:
-          key: app-source-{{ .Branch }}-{{ .Revision }}
+      - checkout
       - run: apk add --no-cache git openssh-client
       - run: mkdir -p ~/.ssh
       - run: ssh-keyscan "techaid.ju.ma" >> ~/.ssh/known_hosts
