@@ -43,7 +43,7 @@ jobs:
   dokku_deploy:
     working_directory: ~/app
     docker:
-      - image: debian/jessie-slim
+      - image: debian:jessie-slim
     steps:
       - restore_cache:
           key: app-source-{{ .Branch }}-{{ .Revision }}
