@@ -74,13 +74,13 @@ workflows:
     jobs:
       - build
       - dokku_deploy:
-        context: global
-        requires:
-          - build
-        filters:
-          branches:
-            only:
-              - master
+          context: global
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
 
       - push_docker_image:
           context: global
