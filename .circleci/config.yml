@@ -40,6 +40,17 @@ jobs:
             - build
             - Dockerfile
 
+  dokku_deploy:
+    working_directory: ~/app
+    docker:
+      image: debian/jessie-slim
+    steps:
+      - restore_cache:
+          key: app-source-{{ .Branch }}-{{ .Revision }}
+      - run: mkdir -p ~/.ssh && echo "$DOKKU_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+      - run: ssh-keyscan "techaid.ju.ma" >> ~/.ssh/known_hosts
+      - run: git push ssh://dokku@techaid.ju.ma/api HEAD:refs/heads/master
+
   push_docker_image:
     working_directory: ~/app
     executor: gcp-gcr/default
@@ -55,14 +66,22 @@ jobs:
           image: techaid-server
           registry-url: eu.gcr.io
           tag: prod-${CIRCLE_SHA1:0:7}
-orbs:
-  gcp-gcr: circleci/gcp-gcr@0.8.0
+
 version: 2.1
 workflows:
   version: 2
   ci_workflow:
     jobs:
       - build
+      - dokku_deploy:
+        context: global
+        requires:
+          - build
+        filters:
+          branches:
+            only:
+              - master
+
       - push_docker_image:
           context: global
           requires:
@@ -70,4 +89,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - disabled-master
