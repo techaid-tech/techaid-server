@@ -43,10 +43,11 @@ jobs:
   dokku_deploy:
     working_directory: ~/app
     docker:
-      - image: debian:jessie-slim
+      - image: alpine:3.6
     steps:
       - restore_cache:
           key: app-source-{{ .Branch }}-{{ .Revision }}
+      - run: apk add --no-cache git openssh-client
       - run: mkdir -p ~/.ssh && echo "$DOKKU_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
       - run: ssh-keyscan "techaid.ju.ma" >> ~/.ssh/known_hosts
       - run: git push ssh://dokku@techaid.ju.ma/api HEAD:refs/heads/master
