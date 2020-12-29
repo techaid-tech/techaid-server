@@ -56,11 +56,11 @@ workflows:
   version: 2
   ci_workflow:
     jobs:
-#       - build
+      - build
       - dokku_deploy:
           context: global
-#           requires:
-#             - build
+          requires:
+            - build
           filters:
             branches:
               only:
