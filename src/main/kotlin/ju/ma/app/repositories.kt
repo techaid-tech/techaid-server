@@ -8,6 +8,8 @@ interface VolunteerRepository : PagingAndSortingRepository<Volunteer, Long>, Que
     fun findByEmail(email: String): Volunteer?
 }
 
+interface ImageRepository : PagingAndSortingRepository<KitImage, Long>, QuerydslPredicateExecutor<KitImage>
+
 interface DonorRepository : PagingAndSortingRepository<Donor, Long>, QuerydslPredicateExecutor<Donor> {
     fun findByEmail(email: String): Donor?
     fun findByPhoneNumber(phone: String): Donor?

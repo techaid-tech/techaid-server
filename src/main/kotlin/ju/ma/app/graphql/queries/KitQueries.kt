@@ -55,14 +55,17 @@ class KitQueries(
 }
 
 @Component
-class kitResolver : GraphQLResolver<KitAttributes> {
+class kitAttributeResolver : GraphQLResolver<KitAttributes> {
+    fun getImages(attr: KitAttributes): List<DeviceImage> {
+        return attr?.kit?.images?.images ?: listOf()
+    }
+}
+
+@Component
+class kitResolver : GraphQLResolver<Kit> {
     fun getAttributes(kit: Kit): KitAttributes {
         val attr = kit.attributes
         attr.kit = kit
         return attr
-    }
-
-    fun getImages(attr: KitAttributes): List<DeviceImage> {
-        return attr?.kit?.images?.images ?: listOf()
     }
 }

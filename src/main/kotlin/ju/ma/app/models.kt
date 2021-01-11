@@ -270,13 +270,20 @@ class KitImage(
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "kit_id")
-    var kit: Kit,
+    var kit: Kit?,
     @Id
     @Column(name = "kit_id")
-    var id: Long = kit.id,
+    var id: Long? = kit?.id,
     @Type(type = "jsonb")
     var images: MutableList<DeviceImage> = mutableListOf()
-) : BaseEntity()
+) : BaseEntity() {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is KitImage) return false
+        if (id != other.id) return false
+        return images == other.images
+    }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class KitAttributes(
@@ -292,13 +299,22 @@ class KitAttributes(
     var status: List<String> = listOf(),
     var network: String? = null,
     var otherNetwork: String? = "UNKNOWN"
-)
+) {
+    @get:JsonIgnore
+    val images by lazy { kit?.images?.images ?: listOf<DeviceImage>() }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class DeviceImage(
     val image: String,
     val id: String = RandomStringUtils.random(5, true, true)
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DeviceImage) return false
+        return id == other.id
+    }
+}
 
 enum class KitType {
     OTHER,
