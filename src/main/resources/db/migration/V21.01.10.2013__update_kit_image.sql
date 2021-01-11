@@ -1,3 +1,4 @@
+drop table if exists kit_images;
 create table if not exists kit_images (
 	kit_id integer,
 	images jsonb,
