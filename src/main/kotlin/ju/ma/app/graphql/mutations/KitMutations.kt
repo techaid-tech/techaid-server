@@ -5,6 +5,7 @@ import javax.persistence.EntityNotFoundException
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import ju.ma.app.DeviceImage
 import ju.ma.app.DonorRepository
 import ju.ma.app.Kit
 import ju.ma.app.KitAttributes
@@ -255,19 +256,28 @@ data class KitAttributesInput(
 ) {
     fun apply(entity: Kit): KitAttributes {
         val self = this
-        val imageMap = entity.attributes.images.map { it.id to it }.toMap().toMutableMap()
-        val newMap = (images ?: listOf<KitImageInput>()).filter { !it.id.isNullOrBlank() }.map { it.id!! to it }.toMap()
+        val images = entity.images ?: KitImage(entity)
+        val imageMap = images.images.map { it.id to it }.toMap().toMutableMap()
+        val newMap = images.images.filter { !it.id.isNullOrBlank() }.map { it.id!! to it }.toMap()
         imageMap.keys.forEach {
             if (!newMap.containsKey(it)) {
                 imageMap.remove(it)
             }
         }
-        images?.forEach {
+        images.images?.forEach {
             if (it.image != null) {
-                val img = KitImage(image = it.image)
+                val img = DeviceImage(image = it.image)
                 imageMap[img.id] = img
             }
         }
+
+        if (images.images.isNotEmpty()) {
+            images.images = imageMap.values.toMutableList()
+            entity.images = images
+        } else {
+            entity.images = null
+        }
+
         return entity.attributes.apply {
             otherType = self.otherType
             state = self.state
@@ -276,7 +286,6 @@ data class KitAttributesInput(
             pickupAvailability = self.pickupAvailability
             status = self.status ?: status
             credentials = self.credentials
-            images = imageMap.values.toMutableList()
             notes = self.notes ?: notes
             network = self.network ?: "UNKNOWN"
         }

@@ -23,6 +23,8 @@ import javax.persistence.ManyToOne
 import javax.persistence.MappedSuperclass
 import javax.persistence.MapsId
 import javax.persistence.OneToMany
+import javax.persistence.OneToOne
+import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import ju.ma.app.services.Coordinates
@@ -58,9 +60,11 @@ class Volunteer(
     var availability: String,
     var createdAt: Instant = Instant.now(),
     var consent: String,
-    @Formula("""
+    @Formula(
+        """
         (SELECT COUNT(*) FROM kit_volunteers k where k.volunteer_id = id)
-    """)
+    """
+    )
     var kitCount: Int = 0,
     @UpdateTimestamp
     var updatedAt: Instant = Instant.now(),
@@ -130,9 +134,11 @@ class Donor(
     var name: String,
     var referral: String,
     var createdAt: Instant = Instant.now(),
-    @Formula("""
+    @Formula(
+        """
         ( SELECT COUNT(*) FROM kits k where k.donor_id = id )
-    """)
+    """
+    )
     var kitCount: Int = 0,
     @UpdateTimestamp
     var updatedAt: Instant = Instant.now(),
@@ -197,7 +203,10 @@ class Kit(
     var organisation: Organisation? = null,
     @JsonIgnore
     @OneToMany(mappedBy = "kit", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
-    var volunteers: MutableSet<KitVolunteer> = mutableSetOf()
+    var volunteers: MutableSet<KitVolunteer> = mutableSetOf(),
+    @OneToOne(mappedBy = "kit", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    var images: KitImage? = null
 ) : BaseEntity() {
     fun addVolunteer(volunteer: Volunteer, type: KitVolunteerType) {
         val entity = KitVolunteer(this, volunteer, KitVolunteerId(this.id, volunteer.id, type))
@@ -255,9 +264,24 @@ class Kit(
     override fun hashCode() = 13
 }
 
+@Entity
+@Table(name = "kit_images")
+class KitImage(
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "kit_id")
+    var kit: Kit,
+    @Id
+    @Column(name = "kit_id")
+    var id: Long = kit.id,
+    @Type(type = "jsonb")
+    var images: MutableList<DeviceImage> = mutableListOf()
+) : BaseEntity()
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 class KitAttributes(
-    var images: MutableList<KitImage> = mutableListOf(),
+    @JsonIgnore
+    var kit: Kit? = null,
     var otherType: String? = null,
     var pickup: String = "",
     var state: String = "",
@@ -271,7 +295,7 @@ class KitAttributes(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class KitImage(
+class DeviceImage(
     val image: String,
     val id: String = RandomStringUtils.random(5, true, true)
 )
@@ -399,9 +423,11 @@ class Organisation(
     var phoneNumber: String,
     var email: String,
     var createdAt: Instant = Instant.now(),
-    @Formula("""
+    @Formula(
+        """
         (SELECT COUNT(*) FROM kits k where k.organisation_id = id)
-    """)
+    """
+    )
     var kitCount: Int = 0,
     @UpdateTimestamp
     var updatedAt: Instant = Instant.now(),

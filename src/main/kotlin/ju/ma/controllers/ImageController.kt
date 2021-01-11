@@ -22,7 +22,7 @@ class ImageController(private val kits: KitRepository) {
     )
     fun image(@PathVariable deviceId: Long, @PathVariable imageId: String, response: HttpServletResponse): ResponseEntity<ByteArray> {
         val kit = kits.findById(deviceId).toNullable() ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find device with id: $deviceId")
-        val image = kit.attributes.images.firstOrNull { it.id == imageId }
+        val image = kit.images?.images?.firstOrNull { it.id == imageId }
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find image with id: $imageId")
         val (_, ext, img) = Regex("data:([^;]+);base64,(.+)").matchEntire(image.image)?.groupValues
             ?: listOf("", "image/png", image.image)

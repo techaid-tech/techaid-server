@@ -1,8 +1,11 @@
 package ju.ma.app.graphql.queries
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver
+import com.coxautodev.graphql.tools.GraphQLResolver
 import java.util.Optional
+import ju.ma.app.DeviceImage
 import ju.ma.app.Kit
+import ju.ma.app.KitAttributes
 import ju.ma.app.KitRepository
 import ju.ma.app.KitStatusCount
 import ju.ma.app.KitTypeCount
@@ -49,4 +52,17 @@ class KitQueries(
     }
 
     fun kit(where: KitWhereInput): Optional<Kit> = kits.findOne(filterService.kitFilter().and(where.build()))
+}
+
+@Component
+class kitResolver : GraphQLResolver<KitAttributes> {
+    fun getAttributes(kit: Kit): KitAttributes {
+        val attr = kit.attributes
+        attr.kit = kit
+        return attr
+    }
+
+    fun getImages(attr: KitAttributes): List<DeviceImage> {
+        return attr?.kit?.images?.images ?: listOf()
+    }
 }
