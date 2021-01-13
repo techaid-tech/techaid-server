@@ -5,12 +5,10 @@ import javax.persistence.EntityNotFoundException
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import ju.ma.app.DeviceImage
 import ju.ma.app.DonorRepository
 import ju.ma.app.ImageRepository
 import ju.ma.app.Kit
 import ju.ma.app.KitAttributes
-import ju.ma.app.KitImage
 import ju.ma.app.KitRepository
 import ju.ma.app.KitStatus
 import ju.ma.app.KitType
@@ -258,28 +256,28 @@ data class KitAttributesInput(
 ) {
     fun apply(entity: Kit): KitAttributes {
         val self = this
-        val inputImages = images ?: listOf<KitImageInput>()
-        val kitImages = entity.images ?: KitImage(entity)
-        val imageMap = kitImages.images.map { it.id to it }.toMap().toMutableMap()
-        val newMap = inputImages.filter { !it.id.isNullOrBlank() }.map { it.id!! to it }.toMap()
-        imageMap.keys.forEach {
-            if (!newMap.containsKey(it)) {
-                imageMap.remove(it)
-            }
-        }
-        inputImages?.forEach {
-            if (it.image != null) {
-                val img = DeviceImage(image = it.image)
-                imageMap[img.id] = img
-            }
-        }
+        // val inputImages = images ?: listOf<KitImageInput>()
+        // val kitImages = entity.images ?: KitImage(entity)
+        // val imageMap = kitImages.images.map { it.id to it }.toMap().toMutableMap()
+        // val newMap = inputImages.filter { !it.id.isNullOrBlank() }.map { it.id!! to it }.toMap()
+        // imageMap.keys.forEach {
+        //     if (!newMap.containsKey(it)) {
+        //         imageMap.remove(it)
+        //     }
+        // }
+        // inputImages?.forEach {
+        //     if (it.image != null) {
+        //         val img = DeviceImage(image = it.image)
+        //         imageMap[img.id] = img
+        //     }
+        // }
 
-        if (imageMap.isNotEmpty()) {
-            kitImages.images = imageMap.values.toMutableList()
-            entity.images = kitImages
-        } else {
-            entity.images = null
-        }
+        // if (imageMap.isNotEmpty()) {
+        //     kitImages.images = imageMap.values.toMutableList()
+        //     entity.images = kitImages
+        // } else {
+        //     entity.images = null
+        // }
 
         return entity.attributes.apply {
             otherType = self.otherType

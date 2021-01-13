@@ -25,7 +25,6 @@ import javax.persistence.MappedSuperclass
 import javax.persistence.MapsId
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
-import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import ju.ma.app.services.Coordinates
@@ -204,10 +203,10 @@ class Kit(
     var organisation: Organisation? = null,
     @JsonIgnore
     @OneToMany(mappedBy = "kit", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
-    var volunteers: MutableSet<KitVolunteer> = mutableSetOf(),
-    @OneToOne(mappedBy = "kit", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    var images: KitImage? = null
+    var volunteers: MutableSet<KitVolunteer> = mutableSetOf()
+    // @OneToOne(mappedBy = "kit", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    // @PrimaryKeyJoinColumn
+    // var images: KitImage? = null
 ) : BaseEntity() {
     fun addVolunteer(volunteer: Volunteer, type: KitVolunteerType) {
         val entity = KitVolunteer(this, volunteer, KitVolunteerId(this.id, volunteer.id, type))
@@ -303,7 +302,7 @@ class KitAttributes(
     var otherNetwork: String? = "UNKNOWN"
 ) {
     @get:JsonIgnore
-    val images by lazy { kit?.images?.images ?: listOf<DeviceImage>() }
+    val images by lazy { listOf<DeviceImage>() }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
