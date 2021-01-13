@@ -57,7 +57,7 @@ class KitQueries(
 @Component
 class kitAttributeResolver : GraphQLResolver<KitAttributes> {
     fun getImages(attr: KitAttributes): List<DeviceImage> {
-        return attr?.kit?.images?.images ?: listOf()
+        return listOf()
     }
 }
 
