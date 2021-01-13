@@ -7,6 +7,7 @@ import com.vladmihalcea.hibernate.type.json.JsonStringType
 import java.io.Serializable
 import java.time.Instant
 import java.util.Objects
+import javax.persistence.Basic
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embeddable
@@ -34,7 +35,6 @@ import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
 import org.hibernate.annotations.UpdateTimestamp
-import javax.persistence.Basic
 
 @TypeDefs(
     TypeDef(name = "json", typeClass = JsonStringType::class),
