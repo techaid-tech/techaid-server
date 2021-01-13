@@ -281,7 +281,6 @@ data class KitAttributesInput(
             entity.images = null
         }
 
-        println("Images: ${entity.images}")
         return entity.attributes.apply {
             otherType = self.otherType
             state = self.state

@@ -34,6 +34,7 @@ import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
 import org.hibernate.annotations.UpdateTimestamp
+import javax.persistence.Basic
 
 @TypeDefs(
     TypeDef(name = "json", typeClass = JsonStringType::class),
@@ -275,6 +276,7 @@ class KitImage(
     @Column(name = "kit_id")
     var id: Long? = kit?.id,
     @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
     var images: MutableList<DeviceImage> = mutableListOf()
 ) : BaseEntity() {
     override fun equals(other: Any?): Boolean {
