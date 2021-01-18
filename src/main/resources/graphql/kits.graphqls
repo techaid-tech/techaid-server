@@ -59,7 +59,9 @@ enum KitStatus {
     DELIVERY_ARRANGED,
     DELIVERED,
     INCOMPLETE,
-    RECYCLED
+    RECYCLED,
+    STORED,
+    COMPLETED
 }
 
 input KitStatusComparison {
