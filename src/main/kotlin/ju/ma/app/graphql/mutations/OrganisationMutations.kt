@@ -31,20 +31,20 @@ class OrganisationMutations(
     private val mailService: MailService
 ) : GraphQLMutationResolver {
     fun createOrganisation(@Valid data: CreateOrganisationInput): Organisation {
-        val entity = when {
-            data.email.isNotBlank() -> organisations.findOne(QOrganisation.organisation.email.eq(data.email)).toNullable()
-            data.website.isNotBlank() -> organisations.findOne(QOrganisation.organisation.website.eq(data.website)).toNullable()
-            else -> null
-        }
-        entity?.let { org ->
-            org.apply {
-                website = if (data.website.isNotBlank()) data.website else website
-                email = if (data.email.isNotBlank()) data.email else email
-                contact = data.contact
-                attributes = data.attributes?.apply(this) ?: attributes
-            }
-            return org
-        }
+        // val entity = when {
+        //     data.email.isNotBlank() -> organisations.findOne(QOrganisation.organisation.email.eq(data.email)).toNullable()
+        //     data.website.isNotBlank() -> organisations.findOne(QOrganisation.organisation.website.eq(data.website)).toNullable()
+        //     else -> null
+        // }
+        // entity?.let { org ->
+        //     org.apply {
+        //         website = if (data.website.isNotBlank()) data.website else website
+        //         email = if (data.email.isNotBlank()) data.email else email
+        //         contact = data.contact
+        //         attributes = data.attributes?.apply(this) ?: attributes
+        //     }
+        //     return org
+        // }
         return organisations.save(data.entity)
     }
 
@@ -64,7 +64,7 @@ class OrganisationMutations(
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('delete:organisation')")
+    @PreAuthorize("hasAnyAuthority('delete:organisations')")
     fun deleteOrganisation(id: Long): Boolean {
         val entity =
             organisations.findById(id).toNullable() ?: throw EntityNotFoundException("No organisation with id: $id")
