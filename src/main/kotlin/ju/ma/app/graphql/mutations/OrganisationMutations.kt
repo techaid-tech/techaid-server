@@ -9,7 +9,6 @@ import ju.ma.app.Capacity
 import ju.ma.app.Organisation
 import ju.ma.app.OrganisationAttributes
 import ju.ma.app.OrganisationRepository
-import ju.ma.app.QOrganisation
 import ju.ma.app.Volunteer
 import ju.ma.app.VolunteerRepository
 import ju.ma.app.services.FilterService
