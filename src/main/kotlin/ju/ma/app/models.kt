@@ -489,5 +489,6 @@ class OrganisationAttributes(
     var alternateRequest: Capacity = Capacity(),
     var accepts: List<String> = listOf(),
     var alternateAccepts: List<String> = listOf(),
-    var notes: String = ""
+    var notes: String = "",
+    var details: String = ""
 )
