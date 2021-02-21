@@ -134,6 +134,7 @@ class Donor(
     var email: String,
     var name: String,
     var referral: String,
+    var consent: Boolean,
     var createdAt: Instant = Instant.now(),
     @Formula(
         """
