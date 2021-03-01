@@ -49,6 +49,7 @@ interface RequestCount {
     val desktops: Long
     val other: Long
     val chromebooks: Long
+    val commsDevices: Long
 }
 
 interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long>,
@@ -62,7 +63,8 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
             coalesce(sum(src.allInOnes),0) AS allInOnes,
             coalesce(sum(src.desktops),0) AS desktops,
             coalesce(sum(src.other),0) AS other,
-            coalesce(sum(src.chromebooks),0) AS chromebooks
+            coalesce(sum(src.chromebooks),0) AS chromebooks,
+            coalesce(sum(src.commsDevices),0) AS commsDevices
         FROM (
           SELECT 
               id,
@@ -72,7 +74,8 @@ interface OrganisationRepository : PagingAndSortingRepository<Organisation, Long
               coalesce((attributes->'request'->'allInOnes')\:\:int +  (attributes->'alternateRequest'->'allInOnes')\:\:int, 0) as allInOnes,
               coalesce((attributes->'request'->'desktops')\:\:int +  (attributes->'alternateRequest'->'desktops')\:\:int, 0) as desktops,
               coalesce((attributes->'request'->'other')\:\:int +  (attributes->'alternateRequest'->'other')\:\:int, 0) as other,
-              coalesce((attributes->'request'->'chromebooks')\:\:int +  (attributes->'alternateRequest'->'chromebooks')\:\:int, 0) as chromebooks 
+              coalesce((attributes->'request'->'chromebooks')\:\:int +  (attributes->'alternateRequest'->'chromebooks')\:\:int, 0) as chromebooks,
+              coalesce((attributes->'request'->'commsDevices')\:\:int +  (attributes->'alternateRequest'->'commsDevices')\:\:int, 0) as commsDevices 
           FROM organisations org
           WHERE org.archived != 'Y' 
         ) AS src

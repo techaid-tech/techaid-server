@@ -112,6 +112,7 @@ data class CapacityInput(
     val laptops: Int? = 0,
     val allInOnes: Int? = 0,
     val desktops: Int? = 0,
+    val commsDevices: Int? = 0,
     val other: Int? = 0
 ) {
     val entity by lazy {
@@ -121,6 +122,7 @@ data class CapacityInput(
             laptops = laptops ?: 0,
             allInOnes = allInOnes ?: 0,
             desktops = desktops ?: 0,
+            commsDevices = commsDevices ?: 0,
             other = other ?: 0
         )
     }

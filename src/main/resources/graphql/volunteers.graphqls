@@ -38,6 +38,7 @@ type Capacity {
     laptops: Int
     allInOnes: Int
     desktops: Int
+    commsDevices: Int
     other: Int
 }
 
@@ -47,6 +48,7 @@ input CapacityInput {
     laptops: Int
     allInOnes: Int
     desktops: Int
+    commsDevices: Int
     other: Int
 }
 
