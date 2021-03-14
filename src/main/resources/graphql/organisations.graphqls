@@ -21,6 +21,7 @@ type RequestCount {
     allInOnes: Int
     desktops: Int
     chromebooks: Int
+    commsDevices: Int
     other: Int
 }
 
@@ -77,6 +78,7 @@ type OrganisationAttributes {
     accepts: [String!]
     alternateAccepts: [String!]
     notes: String
+    details: String
 }
 
 input OrganisationAttributesInput {

@@ -118,7 +118,8 @@ data class Capacity(
     val allInOnes: Int = 0,
     val desktops: Int = 0,
     val other: Int = 0,
-    val chromebooks: Int? = 0
+    val chromebooks: Int? = 0,
+    val commsDevices: Int? = 0
 )
 
 @Entity
@@ -324,7 +325,8 @@ enum class KitType {
     TABLET,
     SMARTPHONE,
     ALLINONE,
-    CHROMEBOOK
+    CHROMEBOOK,
+    COMMSDEVICE
 }
 
 enum class KitStatus {
@@ -489,5 +491,6 @@ class OrganisationAttributes(
     var alternateRequest: Capacity = Capacity(),
     var accepts: List<String> = listOf(),
     var alternateAccepts: List<String> = listOf(),
-    var notes: String = ""
+    var notes: String = "",
+    var details: String = ""
 )
