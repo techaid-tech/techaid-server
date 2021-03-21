@@ -139,7 +139,7 @@ class KitMutations(
                 bodyText = """
                     Hi ${v.name},
                     
-                    ${user.name} assigned you to the ${kit.type} device (${kit.model}) https://lambeth-techaid.ju.ma/dashboard/devices/${kit.id} as a { ${type.name} }.
+                    ${user.name} assigned you to the ${kit.type} device (${kit.model}) https://app.techaid.ju.ma/dashboard/devices/${kit.id} as a { ${type.name} }.
                     
                     Lambeth Techaid
                 """.trimIndent(),
@@ -164,7 +164,7 @@ class KitMutations(
                 bodyText = """
                     Hi ${v.name},
                     
-                    ${user.name} updated the status of ${kit.type} device (${kit.model}) https://lambeth-techaid.ju.ma/dashboard/devices/${kit.id} 
+                    ${user.name} updated the status of ${kit.type} device (${kit.model}) https://app.techaid.ju.ma/dashboard/devices/${kit.id} 
                     from { $previousStatus } to ${kit.status}
                     
                     Lambeth Techaid
@@ -190,8 +190,8 @@ class KitMutations(
                 bodyText = """
                     Hi ${v.name},
                     
-                    ${user.name} assigned the ${kit.type} device (${kit.model}) https://lambeth-techaid.ju.ma/dashboard/devices/${kit.id} 
-                    to the organisation { ${org.name} } to https://lambeth-techaid.ju.ma/dashboard/organisations/${org.id} 
+                    ${user.name} assigned the ${kit.type} device (${kit.model}) https://app.techaid.ju.ma/dashboard/devices/${kit.id} 
+                    to the organisation { ${org.name} } to https://app.techaid.ju.ma/dashboard/organisations/${org.id} 
                     
                     Lambeth Techaid
                 """.trimIndent(),
