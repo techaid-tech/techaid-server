@@ -7,7 +7,7 @@ spec:
       always_run: true
       optional: false
       trigger: "/test web"
-      rerun_command: "/retest web"
+      rerun_command: "/test web"
       source: "build.yaml"
     - name: ci-deploy-techaid-server
       context: "ci-deploy-staging"
