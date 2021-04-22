@@ -60,7 +60,8 @@ data class CreateDonorInput(
     val phoneNumber: String = "",
     val email: String = "",
     val referral: String = "",
-    val name: String
+    val name: String,
+    val consent: Boolean
 ) {
     val entity by lazy {
         Donor(
@@ -68,7 +69,8 @@ data class CreateDonorInput(
             phoneNumber = phoneNumber,
             email = email,
             referral = referral,
-            name = name
+            name = name,
+            consent = consent
         )
     }
 }
@@ -80,7 +82,8 @@ data class UpdateDonorInput(
     val phoneNumber: String,
     val email: String,
     var name: String,
-    val referral: String
+    val referral: String,
+    val consent: Boolean
 ) {
     fun apply(entity: Donor): Donor {
         val self = this
@@ -90,6 +93,7 @@ data class UpdateDonorInput(
             email = if (email != self.email) self.email else this.email
             referral = self.referral
             name = self.name
+            consent = self.consent
         }
     }
 }
