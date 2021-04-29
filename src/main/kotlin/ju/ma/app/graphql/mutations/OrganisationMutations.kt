@@ -103,6 +103,7 @@ data class CreateOrganisationInput(
     val website: String,
     val phoneNumber: String,
     val email: String,
+    val address: String,
     @get:NotBlank
     val contact: String,
     val attributes: OrganisationAttributesInput? = null
@@ -113,6 +114,7 @@ data class CreateOrganisationInput(
             website = website,
             phoneNumber = phoneNumber,
             email = email,
+            address = address,
             contact = contact
         )
         attributes?.let {

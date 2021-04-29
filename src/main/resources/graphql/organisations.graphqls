@@ -5,6 +5,7 @@ type Organisation {
     contact: String
     phoneNumber: String
     email: String
+    address: String
     createdAt: String
     updatedAt: String
     kitCount: Int
@@ -30,6 +31,7 @@ input CreateOrganisationInput {
     website: String
     phoneNumber: String
     email: String
+    address: String
     contact: String
     attributes: OrganisationAttributesInput
 }
@@ -40,6 +42,7 @@ input UpdateOrganisationInput {
     website: String
     phoneNumber: String
     email: String
+    address: String
     contact: String
     volunteerId: ID
     archived: Boolean
@@ -96,6 +99,7 @@ input OrganisationWhereInput {
     phoneNumber: TextComparison
     name: TextComparison
     email: TextComparison
+    address: TextComparison
     contact: TextComparison
     createdAt: TimeComparison
     updatedAt: TimeComparison
