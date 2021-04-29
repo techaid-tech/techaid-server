@@ -81,7 +81,7 @@ class OrganisationMutations(
                 bodyText = """
                     Hi ${v.name},
                     
-                    ${user.name} assigned you to the organisation ${org.name} https://lambeth-techaid.ju.ma/dashboard/organisations/${org.id}.
+                    ${user.name} assigned you to the organisation ${org.name} https://app.techaid.ju.ma/dashboard/organisations/${org.id}.
                     
                     Lambeth Techaid
                 """.trimIndent(),
@@ -103,6 +103,7 @@ data class CreateOrganisationInput(
     val website: String,
     val phoneNumber: String,
     val email: String,
+    @get:NotBlank
     val address: String,
     @get:NotBlank
     val contact: String,
@@ -151,10 +152,11 @@ data class UpdateOrganisationInput(
     @get:NotBlank
     val name: String,
     val website: String,
-    @get:NotBlank
     val phoneNumber: String,
     @get:NotBlank
     val email: String,
+    @get:NotBlank
+    val address: String,
     val contact: String,
     val archived: Boolean? = false,
     val volunteerId: Long? = null,
@@ -167,6 +169,7 @@ data class UpdateOrganisationInput(
             website = self.website
             phoneNumber = self.phoneNumber
             email = self.email
+            address = self.address
             contact = self.contact
             archived = self.archived ?: false
             self.attributes?.let { attr ->
