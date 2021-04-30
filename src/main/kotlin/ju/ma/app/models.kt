@@ -444,6 +444,7 @@ class Organisation(
     var contact: String,
     var phoneNumber: String,
     var email: String,
+    var address: String,
     var createdAt: Instant = Instant.now(),
     @Formula(
         """

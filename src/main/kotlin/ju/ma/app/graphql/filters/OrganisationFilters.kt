@@ -19,6 +19,7 @@ class OrganisationWhereInput(
     var archived: BooleanComparison? = null,
     var volunteer: VolunteerWhereInput? = null,
     var email: TextComparison? = null,
+    var address: TextComparison? = null,
     var createdAt: TimeComparison<Instant>? = null,
     var updatedAt: TimeComparison<Instant>? = null,
     var attributes: OrganisationAttributesWhereInput? = null,
@@ -32,6 +33,7 @@ class OrganisationWhereInput(
         name?.let { builder.and(it.build(entity.name)) }
         contact?.let { builder.and(it.build(entity.contact)) }
         email?.let { builder.and(it.build(entity.email)) }
+        address?.let { builder.and(it.build(entity.address)) }
         createdAt?.let { builder.and(it.build(entity.createdAt)) }
         updatedAt?.let { builder.and(it.build(entity.updatedAt)) }
         phoneNumber?.let { builder.and(it.build(entity.phoneNumber)) }
