@@ -72,7 +72,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://lambeth-techaid.eu.auth0.com/
+          issuer-uri: ${JWT_ISSUER:https://lambeth-techaid.eu.auth0.com/}
   servlet:
     multipart:
       max-file-size: 10MB
