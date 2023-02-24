@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
+import org.springframework.boot.web.error.ErrorAttributeOptions
 import org.springframework.boot.web.servlet.error.ErrorAttributes
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
@@ -23,13 +24,6 @@ import org.springframework.web.context.request.ServletWebRequest
 @RestController
 @ConditionalOnWebApplication
 class CustomErrorController : ErrorController {
-
-    /**
-     * If set will return the full stack trace of the exception
-     */
-    @Value("\${errors.stack_trace:false}")
-    private val debug: Boolean = false
-
     /**
      * The name of this controllers instance
      */
@@ -49,7 +43,7 @@ class CustomErrorController : ErrorController {
     fun errorJSON(request: HttpServletRequest, response: HttpServletResponse): CustomErrorModel {
         // Appropriate HTTP response code (e.g. 404 or 500) is automatically set by Spring.
         // Here we just define response body.
-        return CustomErrorModel.from(response.status, this.application, getErrorAttributes(request, debug))
+        return CustomErrorModel.from(response.status, this.application, getErrorAttributes(request))
     }
 
     /**
@@ -58,24 +52,17 @@ class CustomErrorController : ErrorController {
     @RequestMapping(value = ["/error"], produces = ["text/html"])
     fun errorText(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
         val message =
-            CustomErrorModel.from(response.status, this.application, getErrorAttributes(request, debug)).toString()
+            CustomErrorModel.from(response.status, this.application, getErrorAttributes(request)).toString()
         return ResponseEntity(message, HttpStatus.valueOf(response.status))
-    }
-
-    /**
-     * Returns the path of the error page
-     */
-    override fun getErrorPath(): String {
-        return "/error"
     }
 
     /**
      * Extracts the error attributes from the http request. Includes the error stack trace
      * if requested
      */
-    private fun getErrorAttributes(request: HttpServletRequest, includeStackTrace: Boolean): Map<String, Any> {
+    private fun getErrorAttributes(request: HttpServletRequest): Map<String, Any> {
         val requestAttributes = ServletWebRequest(request)
-        return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace)
+        return errorAttributes.getErrorAttributes(requestAttributes, ErrorAttributeOptions.defaults())
     }
 }
 

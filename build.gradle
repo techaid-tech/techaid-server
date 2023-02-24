@@ -13,6 +13,7 @@ buildscript {
         * Always pick versions suffixed with `.RELEASE`
         **/
         graphQLVersion = '5.7.3'
+        queryDslVersion = '5.0.0'
     }
     repositories {
         mavenCentral()
@@ -26,7 +27,6 @@ buildscript {
 plugins {
     id 'idea'
     id 'jacoco'
-    id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
@@ -60,13 +60,12 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions {
-        freeCompilerArgs = ['-Xjsr305=strict', '-Xjvm-default=compatibility']
+        freeCompilerArgs = ['-Xjsr305=strict', '-Xjvm-default=all-compatibility']
         jvmTarget = '1.8'
     }
 }
 
 test {
-    dependsOn ktlintCheck
     useJUnitPlatform()
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
@@ -170,9 +169,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.flywaydb:flyway-core:6.3.0'
     implementation 'com.vladmihalcea:hibernate-types-52:2.9.8'
+    implementation "com.querydsl:querydsl-core:${queryDslVersion}"
     implementation 'com.github.alexliesenfeld:querydsl-jpa-postgres-json:0.0.7'
-    implementation "com.querydsl:querydsl-jpa:4.2.2"
-    kapt "com.querydsl:querydsl-apt:4.2.2:jpa"
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    kapt "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     runtimeOnly 'org.postgresql:postgresql'
     /* Making use of embedded postgres db when running unit tests */
     testImplementation 'io.zonky.test:embedded-database-spring-test:1.5.3'
@@ -186,4 +187,8 @@ idea {
         sourceDirs += kaptMain
         generatedSourceDirs += kaptMain
     }
+}
+
+kapt {
+    correctErrorTypes true
 }

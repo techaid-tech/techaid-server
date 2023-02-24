@@ -5,6 +5,7 @@ import java.util.concurrent.Callable
 import javax.sql.DataSource
 import mu.KotlinLogging
 import org.hibernate.boot.MetadataSources
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder
 import org.hibernate.cfg.AvailableSettings
 import org.hibernate.dialect.PostgreSQL95Dialect
@@ -13,7 +14,6 @@ import org.hibernate.tool.schema.TargetType
 import org.springframework.boot.autoconfigure.domain.EntityScanPackages
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 import org.springframework.context.annotation.Profile
 import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager
 import org.springframework.stereotype.Component
@@ -46,7 +46,7 @@ class DumpSchema(
         val registry = StandardServiceRegistryBuilder()
             .applySettings(jpaProperties.properties)
             .applySetting(AvailableSettings.DATASOURCE, dataSource)
-            .applySetting(AvailableSettings.PHYSICAL_NAMING_STRATEGY, SpringPhysicalNamingStrategy::class.java)
+            .applySetting(AvailableSettings.PHYSICAL_NAMING_STRATEGY,  CamelCaseToUnderscoresNamingStrategy::class.java)
             .applySetting(AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy::class.java)
             .applySetting(AvailableSettings.DIALECT, PostgreSQL95Dialect::class.java)
             .build()
