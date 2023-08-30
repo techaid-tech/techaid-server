@@ -6,43 +6,35 @@ buildscript {
          * More likely to be limited by the version of the all-open plugin @
          * https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-maven-allopen
          */
-        kotlinVersion = '1.3.70'
+        kotlinVersion = '1.6.21'
+        springBootVersion = '2.7.9'
         /*
         * Versions @ https://github.com/spring-projects/spring-boot/releases
         * Always pick versions suffixed with `.RELEASE`
         **/
-        springBootVersion = '2.2.5.RELEASE'
+        graphQLVersion = '5.7.3'
+        queryDslVersion = '5.0.0'
     }
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
         classpath("org.postgresql:postgresql:42.2.10")
     }
 }
 
 plugins {
+    id 'idea'
     id 'jacoco'
-    id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.jpa' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.kapt' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}"
 }
-
-ext {
-    graphQLVersion = '5.7.3'
-}
-
-apply plugin: 'kotlin'
-apply plugin: 'kotlin-spring'
-apply plugin: 'kotlin-jpa'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 group = 'ju.ma'
 version = '0.0.2-SNAPSHOT'
@@ -68,13 +60,12 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions {
-        freeCompilerArgs = ['-Xjsr305=strict', '-Xjvm-default=compatibility']
+        freeCompilerArgs = ['-Xjsr305=strict', '-Xjvm-default=all-compatibility']
         jvmTarget = '1.8'
     }
 }
 
 test {
-    dependsOn ktlintCheck
     useJUnitPlatform()
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
@@ -129,15 +120,15 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     /* Gmail */
-    compile 'com.google.api-client:google-api-client:1.23.0'
-    compile 'com.google.apis:google-api-services-gmail:v1-rev83-1.23.0'
+    implementation 'com.google.api-client:google-api-client:1.23.0'
+    implementation 'com.google.apis:google-api-services-gmail:v1-rev83-1.23.0'
     implementation 'com.sun.mail:javax.mail:1.6.2'
 
     implementation 'org.springframework.security:spring-security-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-oauth2-jose'
     implementation 'org.springframework.security:spring-security-config'
     implementation 'com.auth0:auth0:1.15.0'
-    compile 'com.auth0:mvc-auth-commons:1.+'
+    implementation 'com.auth0:mvc-auth-commons:1.+'
     implementation 'com.auth0:java-jwt:3.10.3'
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -150,16 +141,16 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    compile "io.github.microutils:kotlin-logging:1.6.26"
+    implementation "io.github.microutils:kotlin-logging:1.6.26"
 
     /* Graphql */
     implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:${graphQLVersion}"
     runtimeOnly "com.graphql-java-kickstart:graphiql-spring-boot-starter:${graphQLVersion}"
     runtimeOnly "com.graphql-java-kickstart:voyager-spring-boot-starter:${graphQLVersion}"
-    testCompile "com.graphql-java-kickstart:graphql-spring-boot-starter-test:${graphQLVersion}"
+    testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:${graphQLVersion}"
 
     /* Utility Dependencies */
-    compile "info.picocli:picocli-spring-boot-starter:4.0.2"
+    implementation "info.picocli:picocli-spring-boot-starter:4.0.2"
 
     /* Logging / Monitoring Dependencies */
     implementation 'net.logstash.logback:logstash-logback-encoder:6.3'
@@ -178,14 +169,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.flywaydb:flyway-core:6.3.0'
     implementation 'com.vladmihalcea:hibernate-types-52:2.9.8'
+    implementation "com.querydsl:querydsl-core:${queryDslVersion}"
     implementation 'com.github.alexliesenfeld:querydsl-jpa-postgres-json:0.0.7'
-    compile "com.querydsl:querydsl-jpa:4.2.2"
-    kapt "com.querydsl:querydsl-apt:4.2.2:jpa"
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    kapt "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     runtimeOnly 'org.postgresql:postgresql'
     /* Making use of embedded postgres db when running unit tests */
-    testImplementation 'io.zonky.test:embedded-database-spring-test:1.5.3'
-    /* Providing In-Memory H2 database as the default spring data-source */
-    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'io.zonky.test:embedded-database-spring-test:2.3.0'
+    testImplementation 'io.zonky.test:embedded-postgres:2.0.4'
+    testImplementation 'io.zonky.test.postgres:embedded-postgres-binaries-darwin-arm64v8:15.4.0'
 }
 
 idea {
@@ -196,35 +189,6 @@ idea {
     }
 }
 
-task updateAppName {
-    doLast {
-        def from = project.hasProperty('previousName')? project.property('previousName') : 'stretech'
-        if(!project.hasProperty('appName')) {
-            throw new GradleException('No appName specified. \n\n\t **** Please run the task with ./gradlew -PappName=<app-name> updateAppName ****')
-        }
-
-        def appName = project.property('appName')
-        logger.info "Changing App Name from $from ==> $appName"
-
-        ant.replace(
-                dir: project.projectDir,
-                token: from,
-                value: appName,
-                includes: 'settings.gradle,Makefile,build.gradle,docker-compose.yml,src/main/resources/*.yml,' +
-                          'docker/proxy.conf,manifests/**/*,src/main/resources/static/index.html'
-        )
-
-        file ( "./.idea" ).list().each{
-            f -> delete "./.idea/${f}"
-        }
-
-        exec {
-            workingDir '.'
-            commandLine 'sh', "${rootProject.projectDir}/gradlew", 'idea', 'ktlintApplyToIdea'
-        }
-
-        delete fileTree('./') {
-            include '*.iml,*.ipr,*.iws'
-        }
-    }
+kapt {
+    correctErrorTypes true
 }

@@ -1,7 +1,6 @@
 package ju.ma.auth
 
 import java.io.IOException
-import java.util.TreeMap
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
@@ -13,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.*
 
 private val log = KotlinLogging.logger {}
 
@@ -41,10 +41,10 @@ class CorsModelProperties {
     val allowedHeaders by lazy {
         headers.asSequence().firstOrNull { (k, _) ->
             k.equals(
-                "Access-Control-Allow-Headers",
-                ignoreCase = true
+                    "Access-Control-Allow-Headers",
+                    ignoreCase = true
             )
-        }?.value?.toUpperCase() ?: ""
+        }?.value?.uppercase(Locale.getDefault()) ?: ""
     }
 
     /**
@@ -53,20 +53,20 @@ class CorsModelProperties {
     val allowedMethods by lazy {
         headers.asSequence().firstOrNull { (k, _) ->
             k.equals(
-                "Access-Control-Allow-Methods",
-                ignoreCase = true
+                    "Access-Control-Allow-Methods",
+                    ignoreCase = true
             )
-        }?.value?.toUpperCase() ?: ""
+        }?.value?.uppercase(Locale.getDefault()) ?: ""
     }
 
     fun matchesOrigin(host: String) = origin == "*" || !origin.isNullOrBlank() && matcher.match(origin, host)
 
     fun matchesPath(path: String) = path.isNullOrBlank() || path == "*" || matcher.match(path, path)
 
-    fun isMethodAllowed(method: String) = allowedMethods == "*" || allowedMethods.contains(method.toUpperCase())
+    fun isMethodAllowed(method: String) = allowedMethods == "*" || allowedMethods.contains(method.uppercase(Locale.getDefault()))
 
     fun isHeaderAllowed(value: String): Boolean {
-        return allowedHeaders == "*" || value.trim().toUpperCase().split(",")
+        return allowedHeaders == "*" || value.trim().uppercase(Locale.getDefault()).split(",")
             .map { it.trim() }
             .filter { it.isNotBlank() }
             .all { allowedHeaders.contains(it) }
@@ -107,11 +107,11 @@ class CorsFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val origin = request.getHeader("Origin")?.trim() ?: ""
-        val method = request.method.trim().toUpperCase()
-        val headers = request.getHeader("Access-Control-Request-Headers")?.trim()?.toUpperCase() ?: ""
+        val method = request.method.trim().uppercase(Locale.getDefault())
+        val headers = request.getHeader("Access-Control-Request-Headers")?.trim()?.uppercase(Locale.getDefault()) ?: ""
         val path = request.requestURI.substring(request.contextPath.length)
 
-        val isPreflightRequest = request.method.trim().toUpperCase() == "OPTIONS"
+        val isPreflightRequest = request.method.trim().uppercase(Locale.getDefault()) == "OPTIONS"
 
         val headerTypes = TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER)
         headerTypes["Access-Control-Allow-Headers"] = "pre"
