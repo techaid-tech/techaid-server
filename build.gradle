@@ -176,9 +176,9 @@ dependencies {
     kapt "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
     runtimeOnly 'org.postgresql:postgresql'
     /* Making use of embedded postgres db when running unit tests */
-    testImplementation 'io.zonky.test:embedded-database-spring-test:1.5.3'
-    /* Providing In-Memory H2 database as the default spring data-source */
-    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'io.zonky.test:embedded-database-spring-test:2.3.0'
+    testImplementation 'io.zonky.test:embedded-postgres:2.0.4'
+    testImplementation 'io.zonky.test.postgres:embedded-postgres-binaries-darwin-arm64v8:15.4.0'
 }
 
 idea {
